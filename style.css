@@ -1,0 +1,403 @@
+
+body {
+  background-color: #111;
+  color: #fff;
+  margin: 0;
+  font-family: 'Trebuchet MS', sans-serif;
+  text-align: center;
+}
+
+.label-rossa {
+  color: #ff4c4c; /* rosso vivo */
+  font-weight: bold;
+}
+
+.logo {
+  width: 100px;
+  margin-top: 20px;
+}
+#logo-container {
+  width: 100%;
+  text-align: center;
+  padding: 8px 0;
+  background-color: black; /* opzionale */
+}
+
+#logo-header {
+  display: flex;
+  align-items: center;
+  padding: 2px 12px;
+  background-color: black;
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
+  font-family: 'Trebuchet MS', sans-serif;
+}
+
+#logo-header img {
+  height: 40px;
+  margin-right: 10px;
+}
+
+
+#logo-container img {
+  height: 25px; /* puoi regolare: es. 30px, 50px */
+  max-width: 150px;
+}
+
+
+#marche-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  max-width: 600px;
+  margin: 20px;
+}
+
+#app-container {
+  height: 680px; /* Puoi regolare questa altezza a piacere */
+  overflow-y: auto;
+  padding: 0px;
+  background-color: #111; /* stesso colore di sfondo della pagina */
+  border-radius: 10px;
+  box-sizing: border-box;
+}
+
+.brand-logos, .modelli-list {
+  cursor: pointer;
+}
+
+.brand-logos img {
+  cursor: pointer;
+}
+
+.btn-rettangolare {
+  font-family: "Trebuchet MS", sans-serif;
+  padding: 12px 20px;
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  margin: 5px;
+  font-size: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  width: 180px;
+  height: 60px;
+}
+
+.btn-rettangolare:hover {
+  background-color: #555;
+}
+
+.marca-btn {
+  width: 120px;
+  height: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px;
+  border: none;
+  background-color: #333;
+  color: white;
+  border-radius: 12px;
+  font-size: 16px;
+  font-family: 'Trebuchet MS', sans-serif;
+  transition: background-color 0.3s;
+}
+
+.marca-btn:hover {
+  background-color: #555;
+}
+
+
+.whatsapp-float {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  z-index: 9999;
+  width: 60px;
+  height: 60px;
+  background-color: #25D366;
+  border-radius: 50%;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  animation: pulse 2s infinite;
+}
+
+.whatsapp-float img {
+  width: 34px;
+  height: 34px;
+}
+
+@keyframes pulse {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+
+.logo-marca {
+  height: 50px;
+  width: 50px;
+  object-fit: contain;
+}
+
+.risultati-list {
+  margin: 10px;
+  padding: 10px;
+  max-width: 100%; /* ← puoi aumentare questo valore */
+
+}
+
+.modelli-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px;
+  max-width: 600px;   /* AGGIUNGI QUESTA RIGA */
+  margin-left: auto;  /* CENTRA */
+  margin-right: auto;
+}
+
+.modelli-list button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Trebuchet MS", sans-serif;
+  gap: 8px;
+  padding: 12px 16px;
+  border: none;
+  background-color: #333;
+  color: white;
+  border-radius: 12px;
+  font-size: 16px;
+  transition: background-color 0.3s;
+  width: 120px;
+  height: 120px;
+  margin: 0px;
+}
+
+.modelli-list button:hover {
+  background-color: #555;
+}
+
+@media (max-width: 429px) {
+  .marca-btn, .btn-rettangolare, .modelli-list button {
+    width: 120px;
+    height: 120px;
+    font-size: 16px;
+  }
+
+  .logo-marca {
+    width: 50px;
+    height: 50px;
+  }
+
+  .modelli-list {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 280px;
+  }
+}
+
+#btn-indietro-risultato {
+  width: 100%;
+  padding: 10px 0;
+  font-size: 18px;
+  background-color: #222;
+  color: #fff;
+  border: none;
+  border-radius: 0;
+  cursor: pointer;
+  font-family: 'Trebuchet MS', sans-serif;
+  transition: background-color 0.3s;
+  margin-bottom: 20px;
+}
+
+#btn-indietro-risultato:hover {
+  background-color: #444;
+}
+
+
+/* VETRINA */
+.vetrina {
+  text-align: center;
+  padding: 10px 0;
+  background-color: #222;
+  border-bottom: 2px solid #333;
+}
+.vetrina-img {
+  width: 100%;
+  max-height: 200px;
+  object-fit: cover;
+}
+.vetrina-titolo {
+  font-size: 20px;
+  margin-top: 10px;
+  color: #fff;
+}
+
+#vetrina-container {
+  margin-bottom: 0px;
+  padding: 10px;
+  min-height: 150px; /* Aggiunta per aumentare l’altezza */
+}
+
+
+
+/* NEWS */
+#news-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 40px;
+  background: #000;
+  color: white;
+  display: flex;
+  align-items: center;
+  z-index: 9999;
+  font-size: 14px;
+  overflow: hidden;
+}
+
+.news-label {
+  color: red;
+  font-weight: bold;
+  margin-left: 10px;
+   line-height: 14px; /* Prova valori leggermente più bassi */
+
+
+  white-space: nowrap;
+  background-color: #000; /* Fondo nero solo per "News:" */
+  z-index: 1;
+  flex-shrink: 0;
+  height: 41px;            /* ← Altezza */
+  line-height: 41px;       /* ← Allineamento verticale del testo */
+
+  width: 80px;        /* ← imposta la larghezza esatta */
+  display: inline-block; /* necessario per applicare la larghezza */
+  text-align: left;   /* opzionale: allinea il testo a sinistra */
+  padding-left: 0px;  /* aggiungi spazio a sinistra */
+
+  margin-left: 0px;
+
+}
+
+.news-marquee {
+  margin-left: 10px;
+  white-space: nowrap;
+  animation: scrollNews 20s linear infinite;
+  z-index: 0;
+  display: inline-block;
+  padding-left: 100%;
+}
+
+@keyframes scrollNews {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+
+
+
+.news-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 40px;
+  overflow: hidden;
+  padding: 5px 10px;
+}
+
+
+
+
+
+
+
+
+
+@keyframes scrollNews {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+}
+.news-blocco {
+  max-width: 600px;
+  margin: 0 auto;
+}
+.news-item {
+  color: #ccc;
+  margin-bottom: 6px;
+  padding-left: 10px;
+  position: relative;
+}
+.news-item::before {
+  content: "🟢";
+  position: absolute;
+  left: 0;
+}
+
+
+
+.vetrina-slide {
+  height: 150px;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.vetrina-slide-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+}
+
+.vetrina-text {
+  flex: 1;
+  text-align: left;
+  padding: 10px;
+  color: white;
+}
+
+.vetrina-titolo {
+  font-size: 30px;
+  font-weight: bold;
+  color: red;
+}
+
+.vetrina-testo {
+  font-size: 18px;
+  margin-top: 5px;
+  color: #eee;
+}
+
+.vetrina-img {
+  height: 100%;
+  width: auto;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-left: 10px;
+}
+
+/* Dissolvenza tra le slide */
+.fade {
+  animation: fadein 0.8s ease-in-out;
+}
+
+@keyframes fadein {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
