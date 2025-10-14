@@ -1,4 +1,3 @@
-
 const sheetId1 = "1YDZPzJmjANOxdzAhB9Z8M26gbwiu2ap2iqNZGq4qtIU"; // Foglio1: dati auto
 const sheetId2 = "1YDZPzJmjANOxdzAhB9Z8M26gbwiu2ap2iqNZGq4qtIU"; // Foglio2: vetrina/news
 
@@ -6,6 +5,7 @@ const datiUrl = `https://opensheet.elk.sh/${sheetId1}/Foglio1`;
 const vetrinaUrl = `https://opensheet.elk.sh/${sheetId2}/Foglio2`;
 
 let datiAuto = [];
+let filtroTipoChiave = "tutte"; // 🔹 nuovo filtro globale
 
 async function caricaDati() {
   try {
@@ -35,6 +35,8 @@ function mostraMarche() {
   document.getElementById("anni-container").style.display = "none";
   document.getElementById("risultati-container").innerHTML = "";
   document.getElementById("marche-container").style.display = "flex";
+  document.getElementById("vetrina-container").style.display = "block";
+  document.getElementById("filtro-container").style.display = "none";
 
   const mapMarche = {};
   datiAuto.forEach(r => {
@@ -69,9 +71,12 @@ function mostraModelli(marca) {
   document.getElementById("modelli-container").style.display = "flex";
   document.getElementById("anni-container").style.display = "none";
   document.getElementById("risultati-container").innerHTML = "";
+  document.getElementById("vetrina-container").style.display = "none";
+  document.getElementById("filtro-container").style.display = "block";
 
   const container = document.getElementById("modelli-container");
   container.innerHTML = "";
+  container.setAttribute("data-marca", marca); // ✅ questa va bene qui
 
   const backBtn = document.createElement("button");
   backBtn.textContent = "⬅️ Torna alle Marche";
@@ -79,25 +84,74 @@ function mostraModelli(marca) {
   backBtn.onclick = mostraMarche;
   container.appendChild(backBtn);
 
-  const modelli = datiAuto.filter(r => r["Marca"] === marca);
+  const modelli = datiAuto.filter(r => {
+    const matchMarca = r["Marca"] === marca;
+    const tipo = (r["Tipo Chiave"] || "").toLowerCase();
+
+    if (filtroTipoChiave === "blade") {
+      return matchMarca && tipo.includes("tradizionale");
+    }
+
+    if (filtroTipoChiave === "prossimità") {
+      return matchMarca && (
+        tipo.includes("prox") ||
+        tipo.includes("slot") ||
+        tipo.includes("fobik") ||
+        tipo.includes("keyless")
+      );
+    }
+
+    return matchMarca;
+  });
+
   const modSet = new Set();
   modelli.forEach(r => {
     const modello = r["Modello"];
     if (modello && !modSet.has(modello)) {
       modSet.add(modello);
+
       const btn = document.createElement("button");
       btn.textContent = modello;
       btn.className = "btn-rettangolare";
-      btn.onclick = () => mostraAnni(marca, modello);
+      btn.onclick = () => {
+        container.setAttribute("data-modello", modello); // ✅ QUI VA QUESTA RIGA
+        mostraAnni(marca, modello);
+      };
       container.appendChild(btn);
     }
   });
+}
+
+// 🔹 NUOVA FUNZIONE DI FILTRO
+function filtroChiave(tipo) {
+  filtroTipoChiave = tipo;
+
+  // Evidenzia il pulsante attivo
+  document.querySelectorAll(".filtro-btn").forEach(b => b.classList.remove("attivo"));
+  document.querySelector(`.filtro-btn[data-tipo='${tipo}']`)?.classList.add("attivo");
+
+  const modelliContainer = document.getElementById("modelli-container");
+  const anniContainer = document.getElementById("anni-container");
+  const risultatiContainer = document.getElementById("risultati-container");
+
+  const marca = modelliContainer?.getAttribute("data-marca") || anniContainer?.getAttribute("data-marca");
+  const modello = anniContainer?.getAttribute("data-modello");
+  const anno = risultatiContainer?.getAttribute("data-anno");
+
+  if (modelliContainer?.style.display === "flex" && marca) {
+    mostraModelli(marca);
+  } else if (anniContainer?.style.display === "flex" && marca && modello) {
+    mostraAnni(marca, modello);
+  } else if (risultatiContainer?.style.display === "block" && marca && modello && anno) {
+    mostraRisultati(marca, modello, parseInt(anno));
+  }
 }
 
 function mostraAnni(marca, modello) {
   document.getElementById("modelli-container").style.display = "none";
   document.getElementById("anni-container").style.display = "flex";
   document.getElementById("risultati-container").innerHTML = "";
+  document.getElementById("vetrina-container").style.display = "none";
 
   const container = document.getElementById("anni-container");
   container.innerHTML = "";
@@ -108,14 +162,26 @@ function mostraAnni(marca, modello) {
   backBtn.onclick = () => mostraModelli(marca);
   container.appendChild(backBtn);
 
-  const anni = datiAuto
-    .filter(r => r["Marca"] === marca && r["Modello"] === modello)
-    .map(r => ({ inizio: r["Anno Inizio"], fine: r["Anno Fine"] }));
+  // Filtra solo i risultati compatibili con tipo chiave selezionato
+  const risultatiFiltrati = datiAuto.filter(r => {
+    const isMarca = r["Marca"] === marca;
+    const isModello = r["Modello"] === modello;
+    const tipo = (r["Tipo Chiave"] || "").toLowerCase();
+
+    let isTipoValido = true;
+    if (filtroTipoChiave === "blade") {
+      isTipoValido = tipo.includes("tradizionale");
+    } else if (filtroTipoChiave === "prossimità") {
+      isTipoValido = tipo.includes("prox") || tipo.includes("slot") || tipo.includes("fobik") || tipo.includes("keyless");
+    }
+
+    return isMarca && isModello && isTipoValido;
+  });
 
   const anniUnici = new Set();
-  anni.forEach(range => {
-    const start = parseInt(range.inizio);
-    const end = parseInt(range.fine);
+  risultatiFiltrati.forEach(range => {
+    const start = parseInt(range["Anno Inizio"]);
+    const end = parseInt(range["Anno Fine"]);
     for (let a = start; a <= end; a++) {
       anniUnici.add(a);
     }
@@ -133,11 +199,13 @@ function mostraAnni(marca, modello) {
 
 function mostraRisultati(marca, modello, anno) {
   document.getElementById("anni-container").style.display = "none";
+  document.getElementById("vetrina-container").style.display = "none";
+
   const container = document.getElementById("risultati-container");
   container.style.display = "block";
   container.innerHTML = "";
-
-  container.scrollTo({ top: 0, behavior: 'instant' });
+  container.setAttribute("data-anno", anno);
+  container.scrollTo({ top: 0, behavior: "instant" });
 
   const backBtn = document.createElement("button");
   backBtn.id = "btn-indietro-risultato";
@@ -145,19 +213,33 @@ function mostraRisultati(marca, modello, anno) {
   backBtn.onclick = () => mostraAnni(marca, modello);
   container.appendChild(backBtn);
 
-  const risultati = datiAuto.filter(r =>
-    r["Marca"] === marca &&
-    r["Modello"] === modello &&
-    parseInt(r["Anno Inizio"]) <= anno &&
-    parseInt(r["Anno Fine"]) >= anno
-  );
+  const risultati = datiAuto.filter(r => {
+  const tipo = (r["Tipo Chiave"] || "").toLowerCase();
+
+  const matchMarca = r["Marca"] === marca;
+  const matchModello = r["Modello"] === modello;
+  const matchAnno = parseInt(r["Anno Inizio"]) <= anno && parseInt(r["Anno Fine"]) >= anno;
+
+  let matchTipo = true;
+  if (filtroTipoChiave === "blade") {
+    matchTipo = tipo === "radiocomando tradizionale";
+  } else if (filtroTipoChiave === "prossimità") {
+    matchTipo = (
+      tipo.includes("prox") ||
+      tipo.includes("slot") ||
+      tipo.includes("fobik") ||
+      tipo.includes("keyless")
+    );
+  }
+
+  return matchMarca && matchModello && matchAnno && matchTipo;
+});
 
   risultati.forEach(r => {
     const div = document.createElement("div");
     div.style = "background: #222; margin:8px; padding:10px; border-radius:8px; text-align: left;";
-    // Aggiungi qui **tutte le colonne** che vuoi visualizzare
-   div.innerHTML = `
-  <div style="color:red; font-weight:bold;">${r.Marca} ${r.Modello}</div>
+    div.innerHTML = `
+      <div style="color:red; font-weight:bold;">${r.Marca} ${r.Modello}</div>
   <div style="margin-top:6px;"><span class="label-rossa">Anno:</span> ${r["Anno Inizio"]} - ${r["Anno Fine"]}<br>
   <div style="margin-top:6px;"><span class="label-rossa">Tipo Chiave:</span> ${r["Tipo Chiave"]}<br>
   <div style="margin-top:6px;"><span class="label-rossa">Transponder:</span> ${r.Transponder}<br>
@@ -171,30 +253,28 @@ function mostraRisultati(marca, modello, anno) {
   <div style="margin-top:6px;"><span class="label-rossa">Situazione Tutte Chiavi Perse:</span> ${r["Situazione Tutte Chiavi Perse"]}<br>
   <div style="margin-top:6px;"><span class="label-rossa">Scheda Xhorse da Usare:</span> ${r["Scheda Xhorse da Usare"]}<br>
   <div style="margin-top:6px;"><span class="label-rossa">Radiocomando Xhorse da Usare:</span> ${r["Radiocomando Xhorse da Usare"]}<br>
-  <div style="margin-top:6px;"><span class="label-rossa">Note e Suggerimenti:</span> ${r["Note e Suggerimenti"] || ""}
-`;
+  <div style="margin-top:6px;"><span class="label-rossa">Note e Suggerimenti:</span> ${r["Note e Suggerimenti"] || ""}</div>
+    `;
     container.appendChild(div);
   });
 }
-// --------------------------- VETRINA + NEWS -----------------------------
 
+// --------------------------- VETRINA + NEWS -----------------------------
 
 function mostraVetrina(dati) {
   const cont = document.getElementById("vetrina-container");
   cont.innerHTML = "";
-
   const slides = dati.filter(r => r.Tipo === "Vetrina");
   if (slides.length === 0) return;
 
   let current = 0;
-
   const slideWrapper = document.createElement("div");
-  slideWrapper.className = "vetrina-slide fade";  // 👈 aggiunto "fade"
+  slideWrapper.className = "vetrina-slide fade";
   cont.appendChild(slideWrapper);
 
   function aggiornaSlide() {
     slideWrapper.classList.remove("fade");
-    void slideWrapper.offsetWidth; // 🪄 forza reflow per riattivare animazione
+    void slideWrapper.offsetWidth;
     slideWrapper.classList.add("fade");
 
     const slide = slides[current];
@@ -227,14 +307,12 @@ function mostraVetrina(dati) {
 
     divContenuto.prepend(testoBox);
     slideWrapper.appendChild(divContenuto);
-
     current = (current + 1) % slides.length;
   }
 
   aggiornaSlide();
   setInterval(aggiornaSlide, 8000);
 }
-
 
 function mostraNews(dati) {
   const cont = document.getElementById("news-container");
@@ -245,6 +323,21 @@ function mostraNews(dati) {
     <span class="news-label">&nbsp;&nbsp;📰 News:</span>
     <div class="news-marquee">${testo}</div>
   `;
+}
+
+function filtroChiave(tipo) {
+  filtroTipoChiave = tipo;
+
+  // Evidenzia il pulsante attivo
+  document.querySelectorAll(".filtro-btn").forEach(b => b.classList.remove("attivo"));
+  document.querySelector(`.filtro-btn[data-tipo='${tipo}']`)?.classList.add("attivo");
+
+  // Se siamo già nella schermata modelli, aggiorna i modelli mostrati
+  const modelliContainer = document.getElementById("modelli-container");
+  const marca = modelliContainer?.getAttribute("data-marca");
+  if (modelliContainer?.style.display === "flex" && marca) {
+    mostraModelli(marca);
+  }
 }
 
 window.onload = caricaDati;

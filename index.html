@@ -22,7 +22,21 @@
     <!-- Caricata dinamicamente -->
   </header>
 
+<div id="filtro-container" class="filtro-box" style="display: none;">
+  <div class="filtro-intestazione">🔍 Filtra il tipo di chiave</div>
+  <div class="filtro-bottoni">
+   <button class="filtro-btn attivo" data-tipo="tutte" onclick="filtroChiave('tutte')">🔑 Tutte</button>
+<button class="filtro-btn" data-tipo="blade" onclick="filtroChiave('blade')">🔑 Blade</button>
+<button class="filtro-btn" data-tipo="prossimità" onclick="filtroChiave('prossimità')">📡 Prossimità</button>
+  </div>
+</div>
+
+
+
   <!-- App principale -->
+
+
+
   <div id="app-container" style="display: none;">
     <div id="marche-container" class="brand-logos"></div>
     <div id="modelli-container" class="modelli-list"></div>
