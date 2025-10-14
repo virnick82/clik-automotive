@@ -156,6 +156,9 @@ function mostraAnni(marca, modello) {
   const container = document.getElementById("anni-container");
   container.innerHTML = "";
 
+  container.setAttribute("data-marca", marca);
+  container.setAttribute("data-modello", modello);
+
   const backBtn = document.createElement("button");
   backBtn.textContent = "⬅️ Indietro";
   backBtn.className = "btn-rettangolare";
@@ -163,20 +166,20 @@ function mostraAnni(marca, modello) {
   container.appendChild(backBtn);
 
   // Filtra solo i risultati compatibili con tipo chiave selezionato
-  const risultatiFiltrati = datiAuto.filter(r => {
-    const isMarca = r["Marca"] === marca;
-    const isModello = r["Modello"] === modello;
-    const tipo = (r["Tipo Chiave"] || "").toLowerCase();
+const risultatiFiltrati = datiAuto.filter(r => {
+  const isMarca = r["Marca"] === marca;
+  const isModello = r["Modello"] === modello;
+  const tipo = (r["Tipo Chiave"] || "").toLowerCase();
 
-    let isTipoValido = true;
-    if (filtroTipoChiave === "blade") {
-      isTipoValido = tipo.includes("tradizionale");
-    } else if (filtroTipoChiave === "prossimità") {
-      isTipoValido = tipo.includes("prox") || tipo.includes("slot") || tipo.includes("fobik") || tipo.includes("keyless");
-    }
+  let isTipoValido = true;
+  if (filtroTipoChiave === "blade") {
+    isTipoValido = tipo.includes("tradizionale");
+  } else if (filtroTipoChiave === "prossimità") {
+    isTipoValido = tipo.includes("prox") || tipo.includes("slot") || tipo.includes("fobik") || tipo.includes("keyless");
+  }
 
-    return isMarca && isModello && isTipoValido;
-  });
+  return isMarca && isModello && isTipoValido;
+});
 
   const anniUnici = new Set();
   risultatiFiltrati.forEach(range => {
@@ -204,7 +207,9 @@ function mostraRisultati(marca, modello, anno) {
   const container = document.getElementById("risultati-container");
   container.style.display = "block";
   container.innerHTML = "";
-  container.setAttribute("data-anno", anno);
+  container.setAttribute("data-marca", marca);
+  container.setAttribute("data-modello", modello);
+  container.setAttribute("data-anno", anno);  
   container.scrollTo({ top: 0, behavior: "instant" });
 
   const backBtn = document.createElement("button");
@@ -332,11 +337,20 @@ function filtroChiave(tipo) {
   document.querySelectorAll(".filtro-btn").forEach(b => b.classList.remove("attivo"));
   document.querySelector(`.filtro-btn[data-tipo='${tipo}']`)?.classList.add("attivo");
 
-  // Se siamo già nella schermata modelli, aggiorna i modelli mostrati
   const modelliContainer = document.getElementById("modelli-container");
-  const marca = modelliContainer?.getAttribute("data-marca");
+  const anniContainer = document.getElementById("anni-container");
+  const risultatiContainer = document.getElementById("risultati-container");
+
+  const marca = modelliContainer?.getAttribute("data-marca") || anniContainer?.getAttribute("data-marca");
+  const modello = anniContainer?.getAttribute("data-modello") || risultatiContainer?.getAttribute("data-modello");
+  const anno = risultatiContainer?.getAttribute("data-anno");
+
   if (modelliContainer?.style.display === "flex" && marca) {
     mostraModelli(marca);
+  } else if (anniContainer?.style.display === "flex" && marca && modello) {
+    mostraAnni(marca, modello);
+  } else if (risultatiContainer?.style.display === "block" && marca && modello && anno) {
+    mostraRisultati(marca, modello, parseInt(anno));
   }
 }
 
