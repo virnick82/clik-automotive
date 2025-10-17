@@ -7,6 +7,8 @@ const vetrinaUrl = `https://opensheet.elk.sh/${sheetId2}/Foglio2`;
 let datiAuto = [];
 let filtroTipoChiave = "tutte"; // 🔹 nuovo filtro globale
 
+let filtroRadiocomando = "tutti";
+
 async function caricaDati() {
   try {
     console.log("Caricamento dati...");
@@ -27,6 +29,7 @@ async function caricaDati() {
 }
 
 // ----------------------------- PWA CENTRALE -----------------------------
+
 
 function mostraMarche() {
   const container = document.getElementById("marche-container");
@@ -128,7 +131,30 @@ function filtroChiave(tipo) {
 
   // Evidenzia il pulsante attivo
   document.querySelectorAll(".filtro-btn").forEach(b => b.classList.remove("attivo"));
-  document.querySelector(`.filtro-btn[data-tipo='${tipo}']`)?.classList.add("attivo");
+document.querySelector(`.filtro-btn[data-radio='${tipo}']`)?.classList.add("attivo");
+  const modelliContainer = document.getElementById("modelli-container");
+  const anniContainer = document.getElementById("anni-container");
+  const risultatiContainer = document.getElementById("risultati-container");
+
+  const marca = modelliContainer?.getAttribute("data-marca") || anniContainer?.getAttribute("data-marca");
+  const modello = anniContainer?.getAttribute("data-modello");
+  const anno = risultatiContainer?.getAttribute("data-anno");
+
+  if (modelliContainer?.style.display === "flex" && marca) {
+    mostraModelli(marca);
+  } else if (anniContainer?.style.display === "flex" && marca && modello) {
+    mostraAnni(marca, modello);
+  } else if (risultatiContainer?.style.display === "block" && marca && modello && anno) {
+    mostraRisultati(marca, modello, parseInt(anno));
+  }
+}
+
+
+function applicaFiltroRadiocomando(tipo) {
+  filtroRadiocomando = tipo;
+
+  document.querySelectorAll(".filtro-radio-btn").forEach(b => b.classList.remove("attivo"));
+  document.querySelector(`.filtro-radio-btn[onclick*="${tipo}"]`)?.classList.add("attivo");
 
   const modelliContainer = document.getElementById("modelli-container");
   const anniContainer = document.getElementById("anni-container");
@@ -220,6 +246,8 @@ function mostraRisultati(marca, modello, anno) {
 
   const risultati = datiAuto.filter(r => {
   const tipo = (r["Tipo Chiave"] || "").toLowerCase();
+  const rcSilca = (r["Radiocomando Silca da Usare"] || "").trim();
+  const rcXhorse = (r["Radiocomando Xhorse da Usare"] || "").trim();
 
   const matchMarca = r["Marca"] === marca;
   const matchModello = r["Modello"] === modello;
@@ -237,7 +265,14 @@ function mostraRisultati(marca, modello, anno) {
     );
   }
 
-  return matchMarca && matchModello && matchAnno && matchTipo;
+  let matchRadio = true;
+if (filtroRadiocomando === "silca") {
+  matchRadio = rcSilca && rcSilca !== "—";
+} else if (filtroRadiocomando === "compatibili") {
+  matchRadio = rcXhorse && rcXhorse !== "—";
+}
+
+  return matchMarca && matchModello && matchAnno && matchTipo && matchRadio;
 });
 
   risultati.forEach(r => {
@@ -256,8 +291,18 @@ function mostraRisultati(marca, modello, anno) {
   <div style="margin-top:6px;"><span class="label-rossa">Metodo di Programmazione:</span> ${r["Metodo di Programmazione"]}<br>
   <div style="margin-top:6px;"><span class="label-rossa">Richiesta Precodifica:</span> ${r["Richiesta Precodifica"]}<br>
   <div style="margin-top:6px;"><span class="label-rossa">Situazione Tutte Chiavi Perse:</span> ${r["Situazione Tutte Chiavi Perse"]}<br>
-  <div style="margin-top:6px;"><span class="label-rossa">Scheda Xhorse da Usare:</span> ${r["Scheda Xhorse da Usare"]}<br>
-  <div style="margin-top:6px;"><span class="label-rossa">Radiocomando Xhorse da Usare:</span> ${r["Radiocomando Xhorse da Usare"]}<br>
+  ${
+  filtroRadiocomando === "silca"
+    ? `<div style="margin-top:6px;"><span class="label-rossa">Radiocomando Silca da Usare:</span> ${r["Radiocomando Silca da Usare"] || "—"}</div>`
+    : filtroRadiocomando === "compatibili"
+      ? `
+<div style="margin-top:6px;"><span class="label-rossa">Scheda Xhorse da Usare:</span> ${r["Scheda Xhorse da Usare"]}<br>
+<div style="margin-top:6px;"><span class="label-rossa">Radiocomando Xhorse da Usare:</span> ${r["Radiocomando Xhorse da Usare"]}<br>`
+      : `
+<div style="margin-top:6px;"><span class="label-rossa">Radiocomando Silca da Usare:</span> ${r["Radiocomando Silca da Usare"]}<br>
+<div style="margin-top:6px;"><span class="label-rossa">Scheda Xhorse da Usare:</span> ${r["Scheda Xhorse da Usare"]}<br>
+<div style="margin-top:6px;"><span class="label-rossa">Radiocomando Xhorse da Usare:</span> ${r["Radiocomando Xhorse da Usare"]}<br>`
+}
   <div style="margin-top:6px;"><span class="label-rossa">Note e Suggerimenti:</span> ${r["Note e Suggerimenti"] || ""}</div>
     `;
     container.appendChild(div);
@@ -330,28 +375,5 @@ function mostraNews(dati) {
   `;
 }
 
-function filtroChiave(tipo) {
-  filtroTipoChiave = tipo;
-
-  // Evidenzia il pulsante attivo
-  document.querySelectorAll(".filtro-btn").forEach(b => b.classList.remove("attivo"));
-  document.querySelector(`.filtro-btn[data-tipo='${tipo}']`)?.classList.add("attivo");
-
-  const modelliContainer = document.getElementById("modelli-container");
-  const anniContainer = document.getElementById("anni-container");
-  const risultatiContainer = document.getElementById("risultati-container");
-
-  const marca = modelliContainer?.getAttribute("data-marca") || anniContainer?.getAttribute("data-marca");
-  const modello = anniContainer?.getAttribute("data-modello") || risultatiContainer?.getAttribute("data-modello");
-  const anno = risultatiContainer?.getAttribute("data-anno");
-
-  if (modelliContainer?.style.display === "flex" && marca) {
-    mostraModelli(marca);
-  } else if (anniContainer?.style.display === "flex" && marca && modello) {
-    mostraAnni(marca, modello);
-  } else if (risultatiContainer?.style.display === "block" && marca && modello && anno) {
-    mostraRisultati(marca, modello, parseInt(anno));
-  }
-}
 
 window.onload = caricaDati;
