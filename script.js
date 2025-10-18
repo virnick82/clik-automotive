@@ -79,7 +79,7 @@ function mostraModelli(marca) {
 
   const container = document.getElementById("modelli-container");
   container.innerHTML = "";
-  container.setAttribute("data-marca", marca); // ✅ questa va bene qui
+  container.setAttribute("data-marca", marca);
 
   const backBtn = document.createElement("button");
   backBtn.textContent = "⬅️ Torna alle Marche";
@@ -87,16 +87,18 @@ function mostraModelli(marca) {
   backBtn.onclick = mostraMarche;
   container.appendChild(backBtn);
 
-  const modelli = datiAuto.filter(r => {
-    const matchMarca = r["Marca"] === marca;
+  const modelliFiltrati = datiAuto.filter(r => {
     const tipo = (r["Tipo Chiave"] || "").toLowerCase();
+    const rcSilca = (r["Radiocomando Silca da Usare"] || "").trim();
+    const rcXhorse = (r["Radiocomando Xhorse da Usare"] || "").trim();
+    
+    const matchMarca = r["Marca"] === marca;
 
+    let matchTipo = true;
     if (filtroTipoChiave === "blade") {
-      return matchMarca && tipo.includes("tradizionale");
-    }
-
-    if (filtroTipoChiave === "prossimità") {
-      return matchMarca && (
+      matchTipo = tipo.includes("tradizionale");
+    } else if (filtroTipoChiave === "prossimità") {
+      matchTipo = (
         tipo.includes("prox") ||
         tipo.includes("slot") ||
         tipo.includes("fobik") ||
@@ -104,11 +106,18 @@ function mostraModelli(marca) {
       );
     }
 
-    return matchMarca;
+    let matchRadio = true;
+    if (filtroRadiocomando === "silca") {
+      matchRadio = rcSilca !== "";
+    } else if (filtroRadiocomando === "compatibili") {
+      matchRadio = rcXhorse !== "";
+    }
+
+    return matchMarca && matchTipo && matchRadio;
   });
 
   const modSet = new Set();
-  modelli.forEach(r => {
+  modelliFiltrati.forEach(r => {
     const modello = r["Modello"];
     if (modello && !modSet.has(modello)) {
       modSet.add(modello);
@@ -117,14 +126,13 @@ function mostraModelli(marca) {
       btn.textContent = modello;
       btn.className = "btn-rettangolare";
       btn.onclick = () => {
-        container.setAttribute("data-modello", modello); // ✅ QUI VA QUESTA RIGA
+        container.setAttribute("data-modello", modello);
         mostraAnni(marca, modello);
       };
       container.appendChild(btn);
     }
   });
 }
-
 // 🔹 NUOVA FUNZIONE DI FILTRO
 function filtroChiave(tipo) {
   filtroTipoChiave = tipo;
@@ -191,21 +199,35 @@ function mostraAnni(marca, modello) {
   backBtn.onclick = () => mostraModelli(marca);
   container.appendChild(backBtn);
 
-  // Filtra solo i risultati compatibili con tipo chiave selezionato
-const risultatiFiltrati = datiAuto.filter(r => {
-  const isMarca = r["Marca"] === marca;
-  const isModello = r["Modello"] === modello;
-  const tipo = (r["Tipo Chiave"] || "").toLowerCase();
+  const risultatiFiltrati = datiAuto.filter(r => {
+    const tipo = (r["Tipo Chiave"] || "").toLowerCase();
+    const rcSilca = (r["Radiocomando Silca da Usare"] || "").trim();
+    const rcXhorse = (r["Radiocomando Xhorse da Usare"] || "").trim();
 
-  let isTipoValido = true;
-  if (filtroTipoChiave === "blade") {
-    isTipoValido = tipo.includes("tradizionale");
-  } else if (filtroTipoChiave === "prossimità") {
-    isTipoValido = tipo.includes("prox") || tipo.includes("slot") || tipo.includes("fobik") || tipo.includes("keyless");
-  }
+    const matchMarca = r["Marca"] === marca;
+    const matchModello = r["Modello"] === modello;
 
-  return isMarca && isModello && isTipoValido;
-});
+    let matchTipo = true;
+    if (filtroTipoChiave === "blade") {
+      matchTipo = tipo.includes("tradizionale");
+    } else if (filtroTipoChiave === "prossimità") {
+      matchTipo = (
+        tipo.includes("prox") ||
+        tipo.includes("slot") ||
+        tipo.includes("fobik") ||
+        tipo.includes("keyless")
+      );
+    }
+
+    let matchRadio = true;
+    if (filtroRadiocomando === "silca") {
+      matchRadio = rcSilca !== "";
+    } else if (filtroRadiocomando === "compatibili") {
+      matchRadio = rcXhorse !== "";
+    }
+
+    return matchMarca && matchModello && matchTipo && matchRadio;
+  });
 
   const anniUnici = new Set();
   risultatiFiltrati.forEach(range => {
@@ -225,7 +247,6 @@ const risultatiFiltrati = datiAuto.filter(r => {
     container.appendChild(btn);
   });
 }
-
 function mostraRisultati(marca, modello, anno) {
   document.getElementById("anni-container").style.display = "none";
   document.getElementById("vetrina-container").style.display = "none";
@@ -307,6 +328,11 @@ if (filtroRadiocomando === "silca") {
     `;
     container.appendChild(div);
   });
+
+// 👉 AGGIUNGI QUESTO BLOCCO QUI PER AGGIUNGERE LO SPAZIO DOP I RISULTATI
+  const spazioFinale = document.createElement("div");
+  spazioFinale.style.height = "100px";
+  container.appendChild(spazioFinale);
 }
 
 // --------------------------- VETRINA + NEWS -----------------------------
