@@ -23,6 +23,11 @@ async function caricaDati() {
     mostraVetrina(datiVetrina);
     mostraNews(datiVetrina);
     document.getElementById("app-container").style.display = "block";
+
+    // 🔴 Attiva visivamente i filtri predefiniti
+    document.querySelector(`.filtro-btn[data-tipo='tutte']`)?.classList.add("attivo");
+    document.querySelector(`.filtro-radio-btn[data-radio='tutti']`)?.classList.add("attivo");
+
   } catch (e) {
     console.error("Errore caricamento dati:", e);
   }
