@@ -276,20 +276,20 @@ body {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  margin-left: 10px;
+  padding-left: 16px;         /* opzionale: margine interno sinistro */
 }
 
 .filtro-riga-superiore,
 .filtro-riga-inferiore {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   margin-bottom: 10px;
 }
 
 .riga-filtro {
   display: flex;
   justify-content: center;
-  gap: 8px;
+  gap: 10px;
   margin-bottom: 5px;
 }
 
@@ -304,14 +304,14 @@ body {
 .filtro-bottoni {
   display: flex;
   justify-content: center;
-  gap: 12px;
+  gap: 10px;                     /* 👈 PROVA aggiungi o aumenta questo valore */
   flex-wrap: wrap;
 }
 
 /* Stile base per tutti i pulsanti filtro */
 .filtro-btn, .filtro-radio-btn {
   font-family: Trebuchet MS, sans-serif;
-  margin-bottom: 20px; /* 👈 aggiungi o aumenta questo valore */
+  margin-bottom: 10px; /* 👈 aggiungi o aumenta questo valore */
   background-color: #333;
   color: white;
   border: none;
@@ -327,6 +327,8 @@ body {
   color: white;
   box-shadow: 0 4px 12px rgba(229, 57, 53, 0.6);
   transform: scale(1.05);
+  gap: 10px;                /* 👈 PROVA aggiungi o aumenta questo valore */
+
 }
 
 /* Hover effetto leggero */
@@ -336,27 +338,35 @@ body {
   transform: scale(1.05);                /* ✅ leggero ingrandimento */
   cursor: pointer;
 
+
 }
 
 .filtro-radio-btn {
   font-family: Trebuchet MS, sans-serif;
-  background-color: #444;
+  background-color: #333;
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 12px;
   padding: 6px 10px;
-  margin: 4px;
+  margin: 0px;            /* 👈 PROVA aggiungi o aumenta questo valore */
   cursor: pointer;
 transition: background-color 0.3s ease, color 0.3s ease;
+
 }
 .filtro-btn.tutte,
 .filtro-radio-btn.tutti {
   width: 100px; /* 🔴 Solo “Tutte” e “Tutti” */
+  height: 60px;
+
+
 }
 
 .filtro-btn:not(.tutte),
 .filtro-radio-btn:not(.tutti) {
   width: 140px; /* 🔵 Tutti gli altri */
+  height: 60px;
+
+
 }
 
 
@@ -364,6 +374,7 @@ transition: background-color 0.3s ease, color 0.3s ease;
   background-color: #e60000;
   color: white;
   font-weight: bold;
+
 }
 
 
