@@ -169,7 +169,7 @@ body {
   flex-wrap: wrap;
   justify-content: center;
   gap: 10px;
-  margin: 20px;
+  margin: 11px 20px 20px 20px;              /* AUMENTATO il margine sopra a 16px */
   max-width: 600px;   /* AGGIUNGI QUESTA RIGA */
   margin-left: auto;  /* CENTRA */
   margin-right: auto;
@@ -534,6 +534,26 @@ transition: background-color 0.3s ease, color 0.3s ease;
 .fade-container {
   transition: opacity 0.4s ease;
   opacity: 0;
+}
+
+#filtro-container {
+  position: sticky;
+  top: 0;
+  z‑index: 1000;
+  background: #111; /* stessa background della sezione filtro */
+  padding‑bottom: 8px;
+}
+
+.linea-separatrice {
+  border: none;
+  border-top: 1px solid #444;
+  margin: 16px 0px 0; /* AUMENTATO il margine sopra a 16px */
+}
+#filtro-container .linea‑separatrice {
+  border: none;
+  border‑top: 1px solid #444;
+  margin: 0px 0 0px 0; /* AUMENTATO il margine sopra a 16px */
+  width: 100%;
 }
 
 @keyframes fadein {

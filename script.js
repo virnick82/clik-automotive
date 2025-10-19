@@ -81,9 +81,20 @@ function mostraModelli(marca) {
   document.getElementById("vetrina-container").style.display = "none";
   document.getElementById("filtro-container").style.display = "block";
 
+  // Aggiungi linea separatrice sotto ai filtri
+const filtroCont = document.getElementById("filtro-container");
+// Rimuove la linea precedente (se già presente)
+const lineaEsistente = filtroCont.querySelector(".linea-separatrice");
+if (!lineaEsistente) {
+  const linea = document.createElement("hr");
+  linea.className = "linea-separatrice";
+  filtroCont.appendChild(linea);
+}
+
   const container = document.getElementById("modelli-container");
   container.innerHTML = "";
   container.setAttribute("data-marca", marca);
+
 
   const backBtn = document.createElement("button");
   backBtn.textContent = "⬅️ Torna alle Marche";
@@ -96,6 +107,8 @@ function mostraModelli(marca) {
   backBtn.style.height = "120px";
   backBtn.onclick = mostraMarche;
   container.appendChild(backBtn);
+
+  
 
   const modelliFiltrati = datiAuto.filter(r => {
     const tipo = (r["Tipo Chiave"] || "").toLowerCase();
@@ -194,6 +207,19 @@ function applicaFiltroRadiocomando(tipo) {
 function mostraAnni(marca, modello) {
   document.getElementById("modelli-container").style.display = "none";
   fadeTo("anni-container"); 
+
+document.getElementById("filtro-container").style.display = "block";
+
+// Aggiungi linea separatrice sotto ai filtri
+const filtroCont = document.getElementById("filtro-container");
+const lineaEsistente = filtroCont.querySelector(".linea-separatrice");
+if (!lineaEsistente) {
+  const linea = document.createElement("hr");
+  linea.className = "linea-separatrice";
+  filtroCont.appendChild(linea);
+}
+
+
   document.getElementById("risultati-container").innerHTML = "";
   document.getElementById("vetrina-container").style.display = "none";
 
@@ -203,6 +229,7 @@ function mostraAnni(marca, modello) {
   container.setAttribute("data-marca", marca);
   container.setAttribute("data-modello", modello);
 
+
   const backBtn = document.createElement("button");
   backBtn.textContent = "⬅️ Indietro";
   backBtn.className = "btn-rettangolare";
@@ -211,6 +238,7 @@ function mostraAnni(marca, modello) {
   
   backBtn.onclick = () => mostraModelli(marca);
   container.appendChild(backBtn);
+
 
   const risultatiFiltrati = datiAuto.filter(r => {
     const tipo = (r["Tipo Chiave"] || "").toLowerCase();
@@ -264,6 +292,9 @@ function mostraRisultati(marca, modello, anno) {
   document.getElementById("anni-container").style.display = "none";
   document.getElementById("vetrina-container").style.display = "none";
   document.getElementById("filtro-container").style.display = "block";
+
+
+
   const container = document.getElementById("risultati-container");
   fadeTo("risultati-container");
   container.innerHTML = "";
@@ -275,7 +306,7 @@ function mostraRisultati(marca, modello, anno) {
   const backBtn = document.createElement("button");
   backBtn.id = "btn-indietro-risultato";
   backBtn.textContent = "⬅️ Torna alla Scelta Anno";
-  backBtn.style.color = "red";
+  backBtn.style.color = "white";
   backBtn.onclick = () => mostraAnni(marca, modello);
   container.appendChild(backBtn);
 
