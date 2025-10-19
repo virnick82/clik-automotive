@@ -88,6 +88,9 @@ function mostraModelli(marca) {
   const backBtn = document.createElement("button");
   backBtn.textContent = "⬅️ Torna alle Marche";
   backBtn.className = "btn-rettangolare modello-btn";
+
+  backBtn.style.color = "red";
+
   backBtn.style.margin = "0px";
   backBtn.style.width = "120px";
   backBtn.style.height = "120px";
@@ -203,6 +206,9 @@ function mostraAnni(marca, modello) {
   const backBtn = document.createElement("button");
   backBtn.textContent = "⬅️ Indietro";
   backBtn.className = "btn-rettangolare";
+
+  backBtn.style.color = "red";
+  
   backBtn.onclick = () => mostraModelli(marca);
   container.appendChild(backBtn);
 
@@ -269,6 +275,7 @@ function mostraRisultati(marca, modello, anno) {
   const backBtn = document.createElement("button");
   backBtn.id = "btn-indietro-risultato";
   backBtn.textContent = "⬅️ Torna alla Scelta Anno";
+  backBtn.style.color = "red";
   backBtn.onclick = () => mostraAnni(marca, modello);
   container.appendChild(backBtn);
 
