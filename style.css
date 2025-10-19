@@ -14,9 +14,9 @@ body {
 
 
 .iconino {
-  height: 18px;
+  height: 45px;
   vertical-align: middle;
-  margin-left: 6px;
+  margin-left: 4px;
   filter: drop-shadow(1px 1px 1px #00000080);
 }
 
@@ -316,6 +316,7 @@ body {
   font-family: Trebuchet MS, sans-serif;
   margin-bottom: 10px; /* 👈 aggiungi o aumenta questo valore */
   background-color: #333;
+
   color: white;
   border: none;
   font-size: 16px; /* ← modifica questo valore secondo le tue preferenze */
@@ -359,7 +360,7 @@ transition: background-color 0.3s ease, color 0.3s ease;
 }
 .filtro-btn.tutte,
 .filtro-radio-btn.tutti {
-  width: 110px; /* 🔴 Solo “Tutte” e “Tutti” */
+  width: 135px; /* 🔴 Solo “Blade e Marchio Silca” */
   height: 60px;
   padding: 6px 6px;
 
@@ -369,7 +370,7 @@ transition: background-color 0.3s ease, color 0.3s ease;
 
 .filtro-btn:not(.tutte),
 .filtro-radio-btn:not(.tutti) {
-  width: 140px; /* 🔵 Tutti gli altri */
+  width: 135px; /* 🔵 Prossimità e Marchio Clik Automotive */
   height: 60px;
   padding: 6px 6px;
 
@@ -554,6 +555,10 @@ transition: background-color 0.3s ease, color 0.3s ease;
   border‑top: 1px solid #444;
   margin: 0px 0 0px 0; /* AUMENTATO il margine sopra a 16px */
   width: 100%;
+}
+
+.btn-piccola {
+  width: 90px !important;  /* o piccoli per Tutte e Tutti */
 }
 
 @keyframes fadein {

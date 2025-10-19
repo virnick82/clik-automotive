@@ -26,15 +26,19 @@
   <div class="filtro-intestazione">🔍 Filtra il tipo di chiave</div>
 
   <div class="filtro-bottoni">
-<button class="filtro-btn tutte attivo" data-radio="tutte" onclick="filtroChiave('tutte')">🚗 Tutte</button>
-  <button class="filtro-btn tutte" data-radio="blade" onclick="filtroChiave('blade')">🔑 Blade</button>
-  <button class="filtro-btn" data-radio="prossimità" onclick="filtroChiave('prossimità')">📡 Prossimità</button>
+<button class="filtro-btn tutte btn-piccola" data-radio="tutte" onclick="filtroChiave('tutte')">🚗 Tutte</button>
+  <button class="filtro-btn tutte" data-radio="blade" onclick="filtroChiave('blade')">🔑&nbsp;&nbsp;Blade</button>
+  <button class="filtro-btn" data-radio="prossimità" onclick="filtroChiave('prossimità')">📡&nbsp;&nbsp;Prossimità</button>
 </div>
 <!-- <div class="filtro-intestazione">🎯 Mostra solo:</div> -->
 <div class="filtro-bottoni">
-<button class="filtro-radio-btn tutti attivo" onclick="applicaFiltroRadiocomando('tutti')">🎯 Tutti</button>  <button class="filtro-radio-btn tutti" onclick="applicaFiltroRadiocomando('silca')">🔴 Solo Silca</button>
+<button class="filtro-radio-btn tutti btn-piccola" onclick="applicaFiltroRadiocomando('tutti')">🎯 Tutti</button>
+
+ <button class="filtro-radio-btn tutti" onclick="applicaFiltroRadiocomando('silca')">
+<img src="silca.png" class="iconino" alt="CLIK">
+
   <button class="filtro-radio-btn" onclick="applicaFiltroRadiocomando('compatibili')">
-  🟢 Solo <img src="clik_logo.png" class="iconino" alt="CLIK">
+<img src="clikautomotive.png" class="iconino" alt="CLIK">
 </button>
 </div>
   </div>
