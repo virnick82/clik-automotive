@@ -42,8 +42,7 @@ function mostraMarche() {
   document.getElementById("modelli-container").style.display = "none";
   document.getElementById("anni-container").style.display = "none";
   document.getElementById("risultati-container").innerHTML = "";
-  document.getElementById("marche-container").style.display = "flex";
-  document.getElementById("vetrina-container").style.display = "block";
+  fadeTo("marche-container");  document.getElementById("vetrina-container").style.display = "block";
   document.getElementById("filtro-container").style.display = "none";
 
   const mapMarche = {};
@@ -76,7 +75,7 @@ function mostraMarche() {
 
 function mostraModelli(marca) {
   document.getElementById("marche-container").style.display = "none";
-  document.getElementById("modelli-container").style.display = "flex";
+  fadeTo("modelli-container");
   document.getElementById("anni-container").style.display = "none";
   document.getElementById("risultati-container").innerHTML = "";
   document.getElementById("vetrina-container").style.display = "none";
@@ -88,7 +87,10 @@ function mostraModelli(marca) {
 
   const backBtn = document.createElement("button");
   backBtn.textContent = "⬅️ Torna alle Marche";
-  backBtn.className = "btn-rettangolare";
+  backBtn.className = "btn-rettangolare modello-btn";
+  backBtn.style.margin = "0px";
+  backBtn.style.width = "120px";
+  backBtn.style.height = "120px";
   backBtn.onclick = mostraMarche;
   container.appendChild(backBtn);
 
@@ -188,7 +190,7 @@ function applicaFiltroRadiocomando(tipo) {
 
 function mostraAnni(marca, modello) {
   document.getElementById("modelli-container").style.display = "none";
-  document.getElementById("anni-container").style.display = "flex";
+  fadeTo("anni-container"); 
   document.getElementById("risultati-container").innerHTML = "";
   document.getElementById("vetrina-container").style.display = "none";
 
@@ -255,9 +257,9 @@ function mostraAnni(marca, modello) {
 function mostraRisultati(marca, modello, anno) {
   document.getElementById("anni-container").style.display = "none";
   document.getElementById("vetrina-container").style.display = "none";
-
+  document.getElementById("filtro-container").style.display = "block";
   const container = document.getElementById("risultati-container");
-  container.style.display = "block";
+  fadeTo("risultati-container");
   container.innerHTML = "";
   container.setAttribute("data-marca", marca);
   container.setAttribute("data-modello", modello);
@@ -406,5 +408,24 @@ function mostraNews(dati) {
   `;
 }
 
+function fadeTo(idToShow) {
+  const sezioni = ["marche-container", "modelli-container", "anni-container", "risultati-container"];
+  sezioni.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      if (id === idToShow) {
+        el.classList.add("fade-container");
+        el.style.opacity = 0;
+        el.style.display = id === "risultati-container" ? "block" : "flex";
+        requestAnimationFrame(() => {
+          el.style.transition = "opacity 0.4s ease";
+          el.style.opacity = 1;
+        });
+      } else {
+        el.style.display = "none";
+      }
+    }
+  });
+}
 
 window.onload = caricaDati;
