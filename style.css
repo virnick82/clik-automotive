@@ -360,7 +360,7 @@ transition: background-color 0.3s ease, color 0.3s ease;
 }
 .filtro-btn.tutte,
 .filtro-radio-btn.tutti {
-  width: 135px; /* 🔴 Solo “Blade e Marchio Silca” */
+  width: 105px; /* 🔴 Solo “Blade e Marchio Silca” */
   height: 60px;
   padding: 6px 6px;
 
@@ -558,7 +558,7 @@ transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .btn-piccola {
-  width: 90px !important;  /* o piccoli per Tutte e Tutti */
+  width: 120px !important;  /* o piccoli per Tutte e Tutti */
 }
 
 @keyframes fadein {

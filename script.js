@@ -25,8 +25,8 @@ async function caricaDati() {
     document.getElementById("app-container").style.display = "block";
 
     // 🔴 Attiva visivamente i filtri predefiniti
-    document.querySelector(`.filtro-btn[data-tipo='tutte']`)?.classList.add("attivo");
-    document.querySelector(`.filtro-radio-btn[data-radio='tutti']`)?.classList.add("attivo");
+    document.querySelector(`.filtro-btn.tutte`)?.classList.add("attivo");
+    document.querySelector(`.filtro-radio-btn.tutti`)?.classList.add("attivo");
 
   } catch (e) {
     console.error("Errore caricamento dati:", e);
@@ -298,17 +298,67 @@ function mostraRisultati(marca, modello, anno) {
   const container = document.getElementById("risultati-container");
   fadeTo("risultati-container");
   container.innerHTML = "";
-  container.setAttribute("data-marca", marca);
-  container.setAttribute("data-modello", modello);
-  container.setAttribute("data-anno", anno);  
-  container.scrollTo({ top: 0, behavior: "instant" });
 
-  const backBtn = document.createElement("button");
+
+
+
+
+const backBtn = document.createElement("button");
   backBtn.id = "btn-indietro-risultato";
   backBtn.textContent = "⬅️ Torna alla Scelta Anno";
   backBtn.style.color = "white";
   backBtn.onclick = () => mostraAnni(marca, modello);
   container.appendChild(backBtn);
+
+
+
+
+// Trova il primo risultato valido per ricavare l'immagine    FOTO NEL RISULTATO FINALE
+const risultatoConFoto = datiAuto.find(r => 
+  r["Marca"] === marca &&
+  r["Modello"] === modello &&
+  parseInt(r["Anno Inizio"]) <= anno &&
+  parseInt(r["Anno Fine"]) >= anno &&
+  ((filtroTipoChiave === "tutte") ||
+    (filtroTipoChiave === "blade" && (r["Tipo Chiave"] || "").toLowerCase().includes("tradizionale")) ||
+    (filtroTipoChiave === "prossimità" && (
+      (r["Tipo Chiave"] || "").toLowerCase().includes("prox") ||
+      (r["Tipo Chiave"] || "").toLowerCase().includes("slot") ||
+      (r["Tipo Chiave"] || "").toLowerCase().includes("fobik") ||
+      (r["Tipo Chiave"] || "").toLowerCase().includes("keyless")
+    ))
+  ) &&
+  ((filtroRadiocomando === "tutti") ||
+   (filtroRadiocomando === "silca" && r["Radiocomando Silca da Usare"] && r["Radiocomando Silca da Usare"] !== "—") ||
+   (filtroRadiocomando === "compatibili" && r["Radiocomando Xhorse da Usare"] && r["Radiocomando Xhorse da Usare"] !== "—"))
+);
+
+if (risultatoConFoto && risultatoConFoto["Foto Chiave"]) {
+  const img = document.createElement("img");
+  img.src = risultatoConFoto["Foto Chiave"];
+  img.alt = "Chiave originale";
+  img.style.opacity = "0";
+img.style.transition = "opacity 0.5s ease-in-out";
+img.onload = () => {
+  img.style.opacity = "1";
+};
+img.style.display = "block";
+img.style.width = "100%";
+img.style.maxWidth = "250px";
+img.style.margin = "0 auto 16px auto";
+img.style.borderRadius = "8px";
+img.style.boxShadow = "0 2px 8px rgba(0,0,0,0.5)";
+  container.appendChild(img);
+}
+
+
+
+  container.setAttribute("data-marca", marca);
+  container.setAttribute("data-modello", modello);
+  container.setAttribute("data-anno", anno);  
+  container.scrollTo({ top: 0, behavior: "instant" });
+
+  
 
   const risultati = datiAuto.filter(r => {
   const tipo = (r["Tipo Chiave"] || "").toLowerCase();
@@ -343,32 +393,45 @@ if (filtroRadiocomando === "silca") {
 
   risultati.forEach(r => {
     const div = document.createElement("div");
-    div.style = "background: #222; margin:8px; padding:10px; border-radius:8px; text-align: left;";
+    div.style = "background: #222; margin:3px; padding:10px; border-radius:8px; text-align: left;";
     div.innerHTML = `
       <div style="color:red; font-weight:bold;">${r.Marca} ${r.Modello}</div>
   <div style="margin-top:6px;"><span class="label-rossa">Anno:</span> ${r["Anno Inizio"]} - ${r["Anno Fine"]}<br>
   <div style="margin-top:6px;"><span class="label-rossa">Tipo Chiave:</span> ${r["Tipo Chiave"]}<br>
   <div style="margin-top:6px;"><span class="label-rossa">Transponder:</span> ${r.Transponder}<br>
-  <div style="margin-top:6px;"><span class="label-rossa">Transponder Clonabile:</span> ${r["Transponder Clonabile"]}<br>
-  <div style="margin-top:6px;"><span class="label-rossa">Transponder Programmabile Con Diagnostico:</span> ${r["Transponder Programmabile Con Diagnostico"]}<br>
-  <div style="margin-top:6px;"><span class="label-rossa">Radiocomando Programmabile Con Diagnostico:</span> ${r["Radiocomando Programmabile Con Diagnostico"]}<br>
+  <hr style="border: 1; border-top: 1px solid #444; margin: 6px 0;">
+   <div style="margin-top:6px;"><span class="label-rossa">Transponder Clonabile:</span> ${r["Transponder Clonabile"]}<br>
+  <div style="margin-top:6px;"><span class="label-rossa">Transponder Program. Con Diagnostico:</span> ${r["Transponder Programmabile Con Diagnostico"]}<br>
+  <div style="margin-top:6px;"><span class="label-rossa">Radiocomando Program. Con Diagnostico:</span> ${r["Radiocomando Programmabile Con Diagnostico"]}<br>
+  <hr style="border: 1; border-top: 1px solid #444; margin: 6px 0;">
+
   <div style="margin-top:6px;"><span class="label-rossa">Pin Rilevabile:</span> ${r["Pin Rilevabile"]}<br>
   <div style="margin-top:6px;"><span class="label-rossa">Pin Necessario Per La Programmazione:</span> ${r["Pin Necessario Per La Programmazione"]}<br>
+  <hr style="border: 1; border-top: 1px solid #444; margin: 6px 0;">
+
   <div style="margin-top:6px;"><span class="label-rossa">Metodo di Programmazione:</span> ${r["Metodo di Programmazione"]}<br>
-  <div style="margin-top:6px;"><span class="label-rossa">Richiesta Precodifica:</span> ${r["Richiesta Precodifica"]}<br>
+  <hr style="border: 1; border-top: 1px solid #444; margin: 6px 0;">
+
+  <div style="margintop:6px;"><span class="label-rossa">Richiesta Precodifica:</span> ${r["Richiesta Precodifica"]}<br>
+  <hr style="border: 1; border-top: 1px solid #444; margin: 6px 0;">
+
   <div style="margin-top:6px;"><span class="label-rossa">Situazione Tutte Chiavi Perse:</span> ${r["Situazione Tutte Chiavi Perse"]}<br>
+  <hr style="border: 1; border-top: 1px solid #444; margin: 6px 0;">
+
   ${
   filtroRadiocomando === "silca"
     ? `<div style="margin-top:6px;"><span class="label-rossa">Radiocomando Silca da Usare:</span> ${r["Radiocomando Silca da Usare"] || "—"}</div>`
     : filtroRadiocomando === "compatibili"
       ? `
-<div style="margin-top:6px;"><span class="label-rossa">Scheda Xhorse da Usare:</span> ${r["Scheda Xhorse da Usare"]}<br>
-<div style="margin-top:6px;"><span class="label-rossa">Radiocomando Xhorse da Usare:</span> ${r["Radiocomando Xhorse da Usare"]}<br>`
+<div style="margin-top:6px;"><span class="label-rossa">Scheda Compatibile da Usare:</span> ${r["Scheda Xhorse da Usare"]}<br>
+<div style="margin-top:6px;"><span class="label-rossa">Radiocomando Clik Automotive da Usare:</span> ${r["Radiocomando Xhorse da Usare"]}<br>`
       : `
 <div style="margin-top:6px;"><span class="label-rossa">Radiocomando Silca da Usare:</span> ${r["Radiocomando Silca da Usare"]}<br>
-<div style="margin-top:6px;"><span class="label-rossa">Scheda Xhorse da Usare:</span> ${r["Scheda Xhorse da Usare"]}<br>
-<div style="margin-top:6px;"><span class="label-rossa">Radiocomando Xhorse da Usare:</span> ${r["Radiocomando Xhorse da Usare"]}<br>`
+<div style="margin-top:6px;"><span class="label-rossa">Scheda Compatibile da Usare:</span> ${r["Scheda Xhorse da Usare"]}<br>
+<div style="margin-top:6px;"><span class="label-rossa">Radiocomando Clik Automotive da Usare:</span> ${r["Radiocomando Xhorse da Usare"]}<br>`
 }
+  <hr style="border: 1; border-top: 1px solid #444; margin: 6px 0;">
+
   <div style="margin-top:6px;"><span class="label-rossa">Note e Suggerimenti:</span> ${r["Note e Suggerimenti"] || ""}</div>
     `;
     container.appendChild(div);
