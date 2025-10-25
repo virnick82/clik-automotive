@@ -477,7 +477,7 @@ if (filtroRadiocomando === "silca") {
   <div style="color:red; font-weight:bold; font-size: 1.5em; font-style: italic;">
     ${r.Marca} ${r.Modello}
   </div>
-  <div style="color: gold; font-size: 1.1em; font-weight: bold; margin-left: 8px;">
+  <div style="color: gold; font-size: 1.1em; font-weight: bold; font-style: italic; margin-left: 8px;">
     <span style="color: red;">Facilità:</span>
     ${
       (() => {
@@ -514,20 +514,6 @@ if (filtroRadiocomando === "silca") {
   <div style="margin-top:6px;"><span class="label-rossa">Situazione Tutte Chiavi Perse:</span> ${r["Situazione Tutte Chiavi Perse"]}<br>
   <hr style="border: 1; border-top: 1px solid #444; margin: 6px 0;">
 
-<div style="margin-top:6px;">
-  <span class="label-rossa">Facilità:</span> 
-  <span style="color: gold;">${
-    (() => {
-      const valore = parseFloat(r["Facile"]);
-      if (isNaN(valore)) return "★☆☆☆☆";
-      if (valore > 4.0) return "★★★★★";
-      if (valore > 3.0) return "★★★★☆";
-      if (valore > 2.0) return "★★★☆☆";
-      if (valore > 1.0) return "★★☆☆☆";
-      return "★☆☆☆☆";
-    })()
-  }</span>
-</div>
 
 
 
