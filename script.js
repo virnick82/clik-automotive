@@ -426,6 +426,73 @@ frecciaDx.onclick = () => {
 
   fotoWrapper.appendChild(titolo);
   fotoWrapper.appendChild(navigazione);
+
+
+// Se ci sono note, aggiungi icona megafono e popup
+if (risultatoConFoto["Note e Suggerimenti"] && risultatoConFoto["Note e Suggerimenti"].trim() !== "") {
+  fotoWrapper.style.position = "relative";
+
+  const noteBtn = document.createElement("img");
+  noteBtn.src = "note.png"; // 👉 metti qui il path corretto del PNG trasparente
+  noteBtn.alt = "Note disponibili";
+  noteBtn.style.width = "160px";
+  noteBtn.style.height = "110px";
+  noteBtn.style.top = "220px";
+  noteBtn.style.left = "260px";
+  noteBtn.style.filter = "drop-shadow(1px 1px 3px rgba(0,0,0,0.6))";
+  noteBtn.style.position = "absolute";
+  noteBtn.style.bottom = "12px";
+  noteBtn.style.right = "0px";
+  noteBtn.style.cursor = "pointer";
+  noteBtn.style.transition = "transform 0.2s ease";
+  noteBtn.style.zIndex = "10";
+  noteBtn.classList.add("attira-attenzione-glow");
+  noteBtn.onmouseover = () => noteBtn.style.transform = "scale(1.15)";
+  noteBtn.onmouseout = () => noteBtn.style.transform = "scale(1)";
+
+  const popup = document.createElement("div");
+  popup.innerHTML = risultatoConFoto["Note e Suggerimenti"];
+  popup.style.position = "absolute";
+  popup.style.bottom = "60px";
+  popup.style.right = "16px";
+  popup.style.background = "#222";
+  popup.style.color = "#fff";
+  popup.style.padding = "10px";
+  popup.style.borderRadius = "8px";
+  popup.style.boxShadow = "0 4px 10px rgba(0,0,0,0.5)";
+  popup.style.display = "none";
+  popup.style.width = "240px";
+  popup.style.fontSize = "13px";
+  popup.style.zIndex = "999";
+
+  noteBtn.onclick = (e) => {
+  e.stopPropagation(); // 👉 Evita che il click sull’icona venga visto come "fuori"
+  popup.style.display = popup.style.display === "none" ? "block" : "none";
+
+  if (popup.style.display === "block") {
+    // Aggiungi listener una sola volta quando si apre
+    const chiudiPopup = (event) => {
+      if (!popup.contains(event.target) && !noteBtn.contains(event.target)) {
+        popup.style.display = "none";
+        document.removeEventListener("click", chiudiPopup);
+      }
+    };
+    document.addEventListener("click", chiudiPopup);
+  }
+};
+
+  // Chiudi il popup se clicchi fuori
+  document.addEventListener("click", function(event) {
+  const isClickInside = popup.contains(event.target) || noteBtn.contains(event.target);
+  if (!isClickInside) {
+    popup.style.display = "none";
+  }
+}, { once: true });
+
+
+  fotoWrapper.appendChild(noteBtn);
+  fotoWrapper.appendChild(popup);
+}
   container.appendChild(fotoWrapper);
 }
   
@@ -492,8 +559,10 @@ if (filtroRadiocomando === "silca") {
     }
   </div>
 </div>
-  <div style="margin-top:6px;"><span class="label-rossa">Anno:</span> ${r["Anno Inizio"]} - ${r["Anno Fine"]}<br>
-  <div style="margin-top:6px;"><span class="label-rossa">Tipo Chiave:</span> ${r["Tipo Chiave"]}<br>
+<div style="margin-top:6px;">
+  <span class="label-rossa">Anno:</span> ${r["Anno Inizio"]} - ${r["Anno Fine"]}
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="label-rossa">VIN:</span> ${r["VIN / Versione"] || "—"}<br>
+</div>  <div style="margin-top:6px;"><span class="label-rossa">Tipo Chiave:</span> ${r["Tipo Chiave"]}<br>
   <div style="margin-top:6px;"><span class="label-rossa">Transponder:</span> ${r.Transponder}<br>
   <hr style="border: 1; border-top: 1px solid #444; margin: 6px 0;">
    <div style="margin-top:6px;"><span class="label-rossa">Transponder Clonabile:</span> ${r["Transponder Clonabile"]}<br>
