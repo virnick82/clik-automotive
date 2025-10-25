@@ -438,7 +438,7 @@ if (risultatoConFoto["Note e Suggerimenti"] && risultatoConFoto["Note e Suggerim
   noteBtn.style.width = "160px";
   noteBtn.style.height = "110px";
   noteBtn.style.top = "220px";
-  noteBtn.style.left = "260px";
+  noteBtn.style.left = "240px";
   noteBtn.style.filter = "drop-shadow(1px 1px 3px rgba(0,0,0,0.6))";
   noteBtn.style.position = "absolute";
   noteBtn.style.bottom = "12px";
@@ -461,8 +461,14 @@ if (risultatoConFoto["Note e Suggerimenti"] && risultatoConFoto["Note e Suggerim
   popup.style.borderRadius = "8px";
   popup.style.boxShadow = "0 4px 10px rgba(0,0,0,0.5)";
   popup.style.display = "none";
-  popup.style.width = "240px";
-  popup.style.fontSize = "13px";
+
+  popup.style.width = "320px";  // maggiore larghezza
+  popup.style.maxWidth = "90%"; // non superare quasi tutta la larghezza su dispositivi piccoli
+  popup.style.maxHeight = "70vh"; // altezza massima, usare unità viewport per adattarsi meglio
+  popup.style.overflowY = "auto"; // se il contenuto è lungo far scorrere
+  popup.style.fontSize = "18px";  // un po’ più grande il testo
+  popup.style.padding = "16px";    // più spazioso
+
   popup.style.zIndex = "999";
 
   noteBtn.onclick = (e) => {
@@ -600,7 +606,7 @@ if (filtroRadiocomando === "silca") {
 }
   <hr style="border: 1; border-top: 1px solid #444; margin: 6px 0;">
 
-  <div style="margin-top:6px;"><span class="label-rossa">Note e Suggerimenti:</span> ${r["Note e Suggerimenti"] || ""}</div>
+
     `;
     container.appendChild(div);
   });
