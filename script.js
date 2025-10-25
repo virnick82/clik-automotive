@@ -604,7 +604,6 @@ if (filtroRadiocomando === "silca") {
 <div style="margin-top:6px;"><span class="label-rossa">Scheda Xhorse da Usare:</span> ${r["Scheda Xhorse da Usare"]}<br>
 <div style="margin-top:6px;"><span class="label-rossa">Radiocomando Clik Automotive da Usare:</span> ${r["Radiocomando Xhorse da Usare"]}<br>`
 }
-  <hr style="border: 1; border-top: 1px solid #444; margin: 6px 0;">
 
 
     `;
