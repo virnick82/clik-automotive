@@ -333,24 +333,102 @@ const risultatoConFoto = datiAuto.find(r =>
    (filtroRadiocomando === "compatibili" && r["Radiocomando Xhorse da Usare"] && r["Radiocomando Xhorse da Usare"] !== "—"))
 );
 
-if (risultatoConFoto && risultatoConFoto["Foto Chiave"]) {
-  const img = document.createElement("img");
-  img.src = risultatoConFoto["Foto Chiave"];
-  img.alt = "Chiave originale";
-  img.style.opacity = "0";
-img.style.transition = "opacity 0.5s ease-in-out";
-img.onload = () => {
-  img.style.opacity = "1";
-};
-img.style.display = "block";
-img.style.width = "100%";
-img.style.maxWidth = "250px";
-img.style.margin = "0 auto 16px auto";
-img.style.borderRadius = "8px";
-img.style.boxShadow = "0 2px 8px rgba(0,0,0,0.5)";
-  container.appendChild(img);
+const immagini = [];
+
+if (risultatoConFoto["Foto Chiave"]) {
+  immagini.push({
+    titolo: "📸&nbsp;&nbsp;Foto Chiave",
+    url: risultatoConFoto["Foto Chiave"],
+    alt: "Chiave originale"
+  });
 }
 
+if (risultatoConFoto["Foto OBD"]) {
+  immagini.push({
+    titolo: "📍&nbsp;&nbsp;Foto Posizione OBD",
+    url: risultatoConFoto["Foto OBD"],
+    alt: "Posizione OBD"
+  });
+}
+
+if (immagini.length > 0) {
+  const fotoWrapper = document.createElement("div");
+  fotoWrapper.style.textAlign = "center";
+  fotoWrapper.style.margin = "12px 0";
+
+  let indice = 0;
+
+  const titolo = document.createElement("div");
+  titolo.innerHTML = immagini[indice].titolo;
+  titolo.style.color = "white";
+  titolo.style.fontWeight = "bold";
+  titolo.style.marginBottom = "6px";
+  titolo.style.fontSize = "16px";
+
+  const img = document.createElement("img");
+  img.src = immagini[indice].url;
+  img.alt = immagini[indice].alt;
+  img.style.opacity = "0";
+  img.style.transition = "opacity 0.5s ease-in-out";
+  img.onload = () => {
+    img.style.opacity = "1";
+  };
+  img.style.display = "block";
+  img.style.width = "100%";
+  img.style.maxWidth = "250px";
+  img.style.margin = "0 auto 16px auto";
+  img.style.borderRadius = "8px";
+  img.style.boxShadow = "0 2px 8px rgba(0,0,0,0.5)";
+
+  // Freccia sinistra
+// Pulsante sinistro
+const frecciaSx = document.createElement("img");
+frecciaSx.src = "frecciasx.png";  // metti qui il tuo path corretto
+frecciaSx.alt = "Indietro";
+frecciaSx.style.width = "40px";
+frecciaSx.style.cursor = "pointer";
+frecciaSx.style.marginRight = "12px";
+frecciaSx.onclick = () => {
+  indice = (indice - 1 + immagini.length) % immagini.length;
+  aggiornaImmagine();
+};
+
+// Pulsante destro
+const frecciaDx = document.createElement("img");
+frecciaDx.src = "frecciadx.png";  // metti qui il tuo path corretto
+frecciaDx.alt = "Avanti";
+frecciaDx.style.width = "40px";
+frecciaDx.style.cursor = "pointer";
+frecciaDx.style.marginLeft = "12px";
+frecciaDx.onclick = () => {
+  indice = (indice + 1) % immagini.length;
+  aggiornaImmagine();
+};
+
+
+  const navigazione = document.createElement("div");
+  navigazione.style.display = "flex";
+  navigazione.style.justifyContent = "center";
+  navigazione.style.alignItems = "center";
+  navigazione.appendChild(frecciaSx);
+  navigazione.appendChild(img);
+  navigazione.appendChild(frecciaDx);
+
+  function aggiornaImmagine() {
+    titolo.innerHTML = immagini[indice].titolo;
+    img.style.opacity = "0";
+    img.src = immagini[indice].url;
+    img.alt = immagini[indice].alt;
+    setTimeout(() => {
+      img.style.opacity = "1";
+    }, 50);
+  }
+
+  fotoWrapper.appendChild(titolo);
+  fotoWrapper.appendChild(navigazione);
+  container.appendChild(fotoWrapper);
+}
+  
 
 
   container.setAttribute("data-marca", marca);
@@ -393,9 +471,9 @@ if (filtroRadiocomando === "silca") {
 
   risultati.forEach(r => {
     const div = document.createElement("div");
-    div.style = "background: #222; margin:3px; padding:10px; border-radius:8px; text-align: left;";
+    div.style = "background: #222; margin:3px 3px 25px 3px; padding:10px; border-radius:8px; text-align: left;";
     div.innerHTML = `
-      <div style="color:red; font-weight:bold;">${r.Marca} ${r.Modello}</div>
+      <div style="color:red; font-weight:bold; font-size: 1.5em; font-style: italic;">${r.Marca} ${r.Modello}</div>
   <div style="margin-top:6px;"><span class="label-rossa">Anno:</span> ${r["Anno Inizio"]} - ${r["Anno Fine"]}<br>
   <div style="margin-top:6px;"><span class="label-rossa">Tipo Chiave:</span> ${r["Tipo Chiave"]}<br>
   <div style="margin-top:6px;"><span class="label-rossa">Transponder:</span> ${r.Transponder}<br>
@@ -423,11 +501,11 @@ if (filtroRadiocomando === "silca") {
     ? `<div style="margin-top:6px;"><span class="label-rossa">Radiocomando Silca da Usare:</span> ${r["Radiocomando Silca da Usare"] || "—"}</div>`
     : filtroRadiocomando === "compatibili"
       ? `
-<div style="margin-top:6px;"><span class="label-rossa">Scheda Compatibile da Usare:</span> ${r["Scheda Xhorse da Usare"]}<br>
+<div style="margin-top:6px;"><span class="label-rossa">Scheda Xhorse da Usare:</span> ${r["Scheda Xhorse da Usare"]}<br>
 <div style="margin-top:6px;"><span class="label-rossa">Radiocomando Clik Automotive da Usare:</span> ${r["Radiocomando Xhorse da Usare"]}<br>`
       : `
 <div style="margin-top:6px;"><span class="label-rossa">Radiocomando Silca da Usare:</span> ${r["Radiocomando Silca da Usare"]}<br>
-<div style="margin-top:6px;"><span class="label-rossa">Scheda Compatibile da Usare:</span> ${r["Scheda Xhorse da Usare"]}<br>
+<div style="margin-top:6px;"><span class="label-rossa">Scheda Xhorse da Usare:</span> ${r["Scheda Xhorse da Usare"]}<br>
 <div style="margin-top:6px;"><span class="label-rossa">Radiocomando Clik Automotive da Usare:</span> ${r["Radiocomando Xhorse da Usare"]}<br>`
 }
   <hr style="border: 1; border-top: 1px solid #444; margin: 6px 0;">

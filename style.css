@@ -226,7 +226,7 @@ body {
   cursor: pointer;
   font-family: 'Trebuchet MS', sans-serif;
   transition: background-color 0.3s;
-  margin-bottom: 20px;
+  margin-bottom: 10px;             /* SPAZIO TRA PULSANTE INDIETRO E DICITURA SU FOTO */
 }
 
 #btn-indietro-risultato:hover {
