@@ -335,10 +335,10 @@ const risultatoConFoto = datiAuto.find(r =>
 
 const immagini = [];
 
-if (risultatoConFoto["Foto Chiave"]) {
+if (risultatoConFoto["Foto Chiave Blade"]) {
   immagini.push({
-    titolo: "📸&nbsp;&nbsp;Foto Chiave",
-    url: risultatoConFoto["Foto Chiave"],
+    titolo: "📸&nbsp;&nbsp;Foto Chiave con Lama Blade",
+    url: risultatoConFoto["Foto Chiave Blade"],
     alt: "Chiave originale"
   });
 }
