@@ -335,10 +335,10 @@ const risultatoConFoto = datiAuto.find(r =>
 
 const immagini = [];
 
-if (risultatoConFoto["Foto Chiave Blade"]) {
+if (risultatoConFoto["Foto Chiave"]) {
   immagini.push({
-    titolo: "📸&nbsp;&nbsp;Foto Chiave con Lama Blade",
-    url: risultatoConFoto["Foto Chiave Blade"],
+    titolo: "📸&nbsp;&nbsp;Foto Chiave",
+    url: risultatoConFoto["Foto Chiave"],
     alt: "Chiave originale"
   });
 }
@@ -365,20 +365,28 @@ if (immagini.length > 0) {
   titolo.style.marginBottom = "6px";
   titolo.style.fontSize = "16px";
 
+
+
   const img = document.createElement("img");
-  img.src = immagini[indice].url;
-  img.alt = immagini[indice].alt;
-  img.style.opacity = "0";
-  img.style.transition = "opacity 0.5s ease-in-out";
-  img.onload = () => {
-    img.style.opacity = "1";
-  };
-  img.style.display = "block";
-  img.style.width = "100%";
-  img.style.maxWidth = "250px";
-  img.style.margin = "0 auto 16px auto";
-  img.style.borderRadius = "8px";
-  img.style.boxShadow = "0 2px 8px rgba(0,0,0,0.5)";
+img.src = immagini[indice].url;
+img.alt = immagini[indice].alt;
+img.style.opacity = "0";
+img.style.transition = "opacity 0.5s ease-in-out";
+img.onload = () => {
+  img.style.opacity = "1";
+};
+
+// ✅ Imposta dimensioni fisse 250x250 e centratura
+img.style.width = "250px";
+img.style.height = "250px";
+img.style.objectFit = "contain"; // Contenimento senza distorsione
+img.style.backgroundColor = "transparent"; // oppure "#111" se vuoi fondo scuro
+img.style.display = "block";
+img.style.margin = "0 auto 16px auto";
+img.style.borderRadius = "8px";
+img.style.boxShadow = "0 2px 8px rgba(0,0,0,0.5)";
+
+
 
   // Freccia sinistra
 // Pulsante sinistro
