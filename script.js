@@ -143,9 +143,26 @@ if (!lineaEsistente) {
     return matchMarca && matchTipo && matchRadio;
   });
 
+
+if (modelliFiltrati.length === 0) {
+  container.innerHTML += `
+    <div style="color: white; text-align: center; font-size: 18px; padding: 20px;">
+      ❌ Nessun Modello trovato con i filtri selezionati.<br><br>
+      🔄 Prova a cambiare i filtri per visualizzare i modelli disponibili.
+    </div>
+  `;
+  return;
+}
+
+
   const modSet = new Set();
   modelliFiltrati.forEach(r => {
     const modello = r["Modello"];
+
+
+
+
+
     if (modello && !modSet.has(modello)) {
       modSet.add(modello);
 
@@ -288,6 +305,19 @@ if (!lineaEsistente) {
   });
 
   const anniOrdinati = Array.from(anniUnici).sort((a, b) => a - b);
+
+
+if (anniOrdinati.length === 0) {
+  container.innerHTML += `
+    <div style="color: white; text-align: center; font-size: 18px; padding: 20px;">
+      ❌ Nessun Risultato disponibile con i filtri selezionati.<br><br>
+      🔄 Prova a cambiare i filtri per visualizzare gli anni disponibili.
+    </div>
+  `;
+  return;
+}
+
+
   anniOrdinati.forEach(anno => {
     const btn = document.createElement("button");
     btn.textContent = anno;
@@ -403,6 +433,15 @@ img.style.margin = "0 auto 16px auto";
 img.style.borderRadius = "8px";
 img.style.boxShadow = "0 2px 8px rgba(0,0,0,0.5)";
 
+
+// Clic su immagine per ingrandire
+img.style.cursor = "zoom-in";
+img.onclick = () => {
+  const overlay = document.getElementById("zoom-overlay");
+  const zoomImg = document.getElementById("zoom-img");
+  zoomImg.src = img.src;
+  overlay.style.display = "flex";
+};
 
 
   // Freccia sinistra
@@ -742,6 +781,15 @@ function fadeTo(idToShow) {
       }
     }
   });
+
+
+// Chiudi zoom cliccando sulla X
+document.getElementById("zoom-close").onclick = () => {
+  document.getElementById("zoom-overlay").style.display = "none";
+};
+
+
 }
+
 
 window.onload = caricaDati;
