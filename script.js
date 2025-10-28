@@ -81,6 +81,10 @@ function mostraModelli(marca) {
   document.getElementById("vetrina-container").style.display = "none";
   document.getElementById("filtro-container").style.display = "block";
 
+document.querySelector(".filtro-btn.tutte")?.style.setProperty("display", "inline-block");
+document.querySelector(".filtro-radio-btn.tutti")?.style.setProperty("display", "inline-block");
+
+
   // Aggiungi linea separatrice sotto ai filtri
 const filtroCont = document.getElementById("filtro-container");
 // Rimuove la linea precedente (se già presente)
@@ -210,6 +214,10 @@ function mostraAnni(marca, modello) {
 
 document.getElementById("filtro-container").style.display = "block";
 
+document.querySelector(".filtro-btn.tutte")?.style.setProperty("display", "inline-block");
+document.querySelector(".filtro-radio-btn.tutti")?.style.setProperty("display", "inline-block");
+
+
 // Aggiungi linea separatrice sotto ai filtri
 const filtroCont = document.getElementById("filtro-container");
 const lineaEsistente = filtroCont.querySelector(".linea-separatrice");
@@ -294,6 +302,13 @@ function mostraRisultati(marca, modello, anno) {
   document.getElementById("filtro-container").style.display = "block";
 
 
+// 🔴 Nasconde i pulsanti Blade & Prossimità + Silca & Clik Automotive nella schermata risultati
+const bladeProxBtn = document.querySelector(".filtro-btn.tutte");
+if (bladeProxBtn) bladeProxBtn.style.display = "none";
+
+const silcaClikBtn = document.querySelector(".filtro-radio-btn.tutti");
+if (silcaClikBtn) silcaClikBtn.style.display = "none";
+
 
   const container = document.getElementById("risultati-container");
   fadeTo("risultati-container");
@@ -335,20 +350,22 @@ const risultatoConFoto = datiAuto.find(r =>
 
 const immagini = [];
 
-if (risultatoConFoto["Foto Chiave"]) {
-  immagini.push({
-    titolo: "📸&nbsp;&nbsp;Foto Chiave",
-    url: risultatoConFoto["Foto Chiave"],
-    alt: "Chiave originale"
-  });
-}
+if (risultatoConFoto) {
+  if (risultatoConFoto["Foto Chiave"]) {
+    immagini.push({
+      titolo: "📸&nbsp;&nbsp;Foto Chiave",
+      url: risultatoConFoto["Foto Chiave"],
+      alt: "Chiave originale"
+    });
+  }
 
-if (risultatoConFoto["Foto OBD"]) {
-  immagini.push({
-    titolo: "📍&nbsp;&nbsp;Foto Posizione OBD",
-    url: risultatoConFoto["Foto OBD"],
-    alt: "Posizione OBD"
-  });
+  if (risultatoConFoto["Foto OBD"]) {
+    immagini.push({
+      titolo: "📍&nbsp;&nbsp;Foto Posizione OBD",
+      url: risultatoConFoto["Foto OBD"],
+      alt: "Posizione OBD"
+    });
+  }
 }
 
 if (immagini.length > 0) {
@@ -437,7 +454,7 @@ frecciaDx.onclick = () => {
 
 
 // Se ci sono note, aggiungi icona megafono e popup
-if (risultatoConFoto["Note e Suggerimenti"] && risultatoConFoto["Note e Suggerimenti"].trim() !== "") {
+if (risultatoConFoto && risultatoConFoto["Note e Suggerimenti"] && risultatoConFoto["Note e Suggerimenti"].trim() !== "") {
   fotoWrapper.style.position = "relative";
 
   const noteBtn = document.createElement("img");
@@ -550,6 +567,20 @@ if (filtroRadiocomando === "silca") {
   return matchMarca && matchModello && matchAnno && matchTipo && matchRadio;
 });
 
+// 🔎 Se non ci sono risultati, mostra messaggio informativo
+if (risultati.length === 0) {
+  const messaggio = document.createElement("div");
+  messaggio.innerHTML = `
+    <div style="color: white; text-align: center; font-size: 18px; padding: 20px;">
+      ❌ Nessun risultato trovato con i filtri selezionati.<br><br>
+      🔄 Prova a cambiare i filtri per visualizzare le chiavi disponibili.
+    </div>
+  `;
+  container.appendChild(messaggio);
+  return; // 🔴 Interrompe la funzione per evitare altri errori
+}
+
+
   risultati.forEach(r => {
     const div = document.createElement("div");
     div.style = "background: #222; margin:3px 3px 25px 3px; padding:10px; border-radius:8px; text-align: left;";
@@ -617,6 +648,9 @@ if (filtroRadiocomando === "silca") {
     `;
     container.appendChild(div);
   });
+
+
+
 
 // 👉 AGGIUNGI QUESTO BLOCCO QUI PER AGGIUNGERE LO SPAZIO DOP I RISULTATI
   const spazioFinale = document.createElement("div");
