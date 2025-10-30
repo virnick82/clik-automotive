@@ -145,15 +145,16 @@ if (!lineaEsistente) {
 
 
 if (modelliFiltrati.length === 0) {
-  container.innerHTML += `
+  const messaggio = document.createElement("div");
+  messaggio.innerHTML = `
     <div style="color: white; text-align: center; font-size: 18px; padding: 20px;">
       ❌ Nessun Modello trovato con i filtri selezionati.<br><br>
       🔄 Prova a cambiare i filtri per visualizzare i modelli disponibili.
     </div>
   `;
-  return;
+  container.appendChild(messaggio);
+  return; // ❗️Lascia il return ma il pulsante è stato già creato prima
 }
-
 
   const modSet = new Set();
   modelliFiltrati.forEach(r => {
@@ -308,15 +309,16 @@ if (!lineaEsistente) {
 
 
 if (anniOrdinati.length === 0) {
-  container.innerHTML += `
+  const messaggio = document.createElement("div");
+  messaggio.innerHTML = `
     <div style="color: white; text-align: center; font-size: 18px; padding: 20px;">
-      ❌ Nessun Risultato disponibile con i filtri selezionati.<br><br>
+      ❌ Nessun anno disponibile con i filtri selezionati.<br><br>
       🔄 Prova a cambiare i filtri per visualizzare gli anni disponibili.
     </div>
   `;
-  return;
+  container.appendChild(messaggio);
+  return; // Il pulsante "⬅️ Indietro" è già stato creato sopra
 }
-
 
   anniOrdinati.forEach(anno => {
     const btn = document.createElement("button");
