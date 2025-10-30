@@ -794,14 +794,4 @@ document.getElementById("zoom-close").onclick = () => {
 }
 
 
-window.addEventListener("DOMContentLoaded", () => {
-  const codiceSalvato = localStorage.getItem("codiceAutorizzato");
-  if (codiceSalvato) {
-    document.getElementById("login-container").style.display = "none";
-    document.getElementById("app-container").style.display = "block";
-    caricaDati();  // ✅ solo qui viene lanciato il caricamento dati
-  } else {
-    document.getElementById("login-container").style.display = "block";
-    document.getElementById("app-container").style.display = "none";
-  }
-});
+window.onload = caricaDati;
