@@ -1,4 +1,4 @@
-const URL_VERIFICA = "https://script.google.com/macros/s/AKfycbw6DKnHyQWdu_5A3u4gQXdJsoRwmmde-KgADUboFx8I0dF6qMqplfyMwLhC21SP96O7/exec";
+const URL_VERIFICA = "https://script.google.com/macros/s/AKfycbxEj4X_zN-FNqycMA8gxuJ5pOPaLhe0qrDErTYjokGZg8sSps0dj-5n_W7SRevGQQ/exec";
 
 function verificaCodice() {
   const codice = document.getElementById("codice-input").value.trim().toUpperCase();
