@@ -28,7 +28,7 @@ window.addEventListener("DOMContentLoaded", () => {
   if (codiceSalvato) {
     document.getElementById("login-container").style.display = "none";
     document.getElementById("app-container").style.display = "block";
-    caricaDati(); // avvia direttamente l'app se già autorizzato
+    caricaDati();
   } else {
     document.getElementById("login-container").style.display = "block";
     document.getElementById("app-container").style.display = "none";
