@@ -17,6 +17,34 @@
   <span>Assistenza Chiavi Automotive</span>
 
 </div>
+
+
+<!-- Pulsante Logout -->
+<!-- Pulsante Logout compatto -->
+<button id="logout-btn" style="
+  position: fixed;
+  top: 9px;
+  right: 2px;
+  background: #ff3b3b;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  width: 80px;
+  height: 25px;
+  font-size: 13px;
+  font-weight: bold;
+  line-height: 20px;
+  text-align: center;
+  cursor: pointer;
+  z-index: 1000;
+  display: none;
+  box-shadow: 0 0 6px rgba(255,0,0,0.5);
+">
+  
+  🔒 Logout
+</button>
+
+
   <!-- Vetrina -->
   <header id="vetrina-container">
     <!-- Caricata dinamicamente -->
@@ -76,6 +104,28 @@
   <script src="script.js"></script>
 
   <script src="login.js"></script>
+
+<script>
+  // Gestione Logout
+  const logoutBtn = document.getElementById("logout-btn");
+
+  logoutBtn.addEventListener("click", () => {
+    localStorage.removeItem("codiceAutorizzato");
+    location.reload();
+  });
+
+  // Mostra il pulsante logout solo se loggato
+  window.addEventListener("DOMContentLoaded", () => {
+    const codiceSalvato = localStorage.getItem("codiceAutorizzato");
+    if (codiceSalvato) {
+      logoutBtn.style.display = "block";
+    } else {
+      logoutBtn.style.display = "none";
+    }
+  });
+</script>
+
+
 
 <a href="https://wa.me/393895019982?text=Ciao!%20Ho%20bisogno%20di%20assistenza%20per%20le%20chiavi%20auto." 
    class="whatsapp-float" 

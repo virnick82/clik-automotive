@@ -79,3 +79,22 @@ window.addEventListener("DOMContentLoaded", () => {
     document.getElementById("news-container").style.display = "none";
   }
 });
+
+
+// Funzione logout
+const logoutBtn = document.getElementById("logout-btn");
+
+logoutBtn.addEventListener("click", () => {
+  localStorage.removeItem("codiceAutorizzato");
+  location.reload();
+});
+
+// Mostra il pulsante logout solo se loggato
+window.addEventListener("DOMContentLoaded", () => {
+  const codiceSalvato = localStorage.getItem("codiceAutorizzato");
+  if (codiceSalvato) {
+    logoutBtn.style.display = "block";
+  } else {
+    logoutBtn.style.display = "none";
+  }
+});
