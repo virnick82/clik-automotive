@@ -89,9 +89,8 @@ window.addEventListener("DOMContentLoaded", () => {
 const logoutBtn = document.getElementById("logout-btn");
 
 logoutBtn.addEventListener("click", () => {
-  // 👉 Cancella anche il deviceId se vuoi farlo usare da un altro dispositivo
+  // 🔹 NON cancelliamo il deviceId, così resta lo stesso ID
   localStorage.removeItem("codiceAutorizzato");
-  localStorage.removeItem("deviceId");
   location.reload();
 });
 
