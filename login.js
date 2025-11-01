@@ -1,5 +1,5 @@
 // URL Google Apps Script per verifica codice cliente
-const URL_VERIFICA = "https://script.google.com/macros/s/AKfycby9uP68G-IejY1iUx4gDG2Fvw0G9JeK3PNDlY6AevZ-vVIbkGGr5DDUYDAkE_x_-UMk/exec";
+const URL_VERIFICA = "https://script.google.com/macros/s/AKfycbybAoagGft7hu3pxf2ZDgFZ2gBVHfwY49p8qUN8oU3yv9ciuQq-jva0EXcnv_3NawZP/exec";
 
 // Funzione di verifica codice
 function verificaCodice() {
@@ -13,12 +13,17 @@ function verificaCodice() {
     return;
   }
 
+  // 👉 CREA O RECUPERA L’ID UNIVOCO DEL DISPOSITIVO
+  const deviceId = localStorage.getItem("deviceId") || crypto.randomUUID();
+  localStorage.setItem("deviceId", deviceId);
+
   // Disabilita il pulsante durante la verifica
   const bottone = document.querySelector("#login-container button");
   bottone.disabled = true;
   bottone.textContent = "Verifica...";
 
-  fetch(`${URL_VERIFICA}?codice=${codice}`)
+  // 👉 AGGIUNGI IL DEVICE ID NELLA RICHIESTA
+  fetch(`${URL_VERIFICA}?codice=${codice}&device=${deviceId}`)
     .then(response => response.json())
     .then(data => {
       bottone.disabled = false;
@@ -42,8 +47,8 @@ function verificaCodice() {
           console.warn("⚠️ Funzione caricaDati() non trovata");
         }
       } else {
-        // ❌ Codice errato
-        erroreBox.textContent = "❌ Codice non valido";
+        // ❌ Codice errato o già usato su altro device
+        erroreBox.textContent = data.message || "❌ Codice non valido";
         erroreBox.style.display = "block";
       }
     })
@@ -80,12 +85,13 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-
 // Funzione logout
 const logoutBtn = document.getElementById("logout-btn");
 
 logoutBtn.addEventListener("click", () => {
+  // 👉 Cancella anche il deviceId se vuoi farlo usare da un altro dispositivo
   localStorage.removeItem("codiceAutorizzato");
+  localStorage.removeItem("deviceId");
   location.reload();
 });
 
