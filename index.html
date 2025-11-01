@@ -48,6 +48,17 @@
 
   <!-- App principale -->
 
+<!-- LOGIN -->
+<div id="login-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh;">
+  <div style="background-color: #111; padding: 30px; border-radius: 10px; border: 2px solid red; text-align: center;">
+    <h2 style="color: white; margin-bottom: 15px;">Accesso Autorizzato</h2>
+    <input id="codice-input" type="text" placeholder="Inserisci codice cliente" style="padding: 10px; width: 250px; margin-bottom: 10px;" />
+    <br>
+    <button onclick="verificaCodice()" style="padding: 10px 20px; background-color: red; color: white; border: none; cursor: pointer;">Accedi</button>
+    <div id="errore-login" style="color: red; margin-top: 10px; display: none;">❌ Errore di connessione</div>
+  </div>
+</div>
+
 
 
   <div id="app-container" style="display: none;">
@@ -63,6 +74,8 @@
   </footer>
 
   <script src="script.js"></script>
+
+  <script src="login.js"></script>
 
 <a href="https://wa.me/393895019982?text=Ciao!%20Ho%20bisogno%20di%20assistenza%20per%20le%20chiavi%20auto." 
    class="whatsapp-float" 

@@ -1,43 +1,41 @@
-async function verificaCodice() {
+const URL_VERIFICA = "https://script.google.com/macros/s/AKfycbxjj7DT23-DCj5YY4ZtWGEPJI6g0OxhG84KQvKPHgNjo5Wyga_0_vc-VtdjraqXerDU/exec";
+
+function verificaCodice() {
   const codice = document.getElementById("codice-input").value.trim().toUpperCase();
-  const erroreEl = document.getElementById("errore-codice");
+  if (!codice) return;
 
-  if (!codice) {
-    erroreEl.textContent = "❌ Inserisci un codice";
-    erroreEl.style.display = "block";
-    return;
-  }
-
-  try {
-    const url = `https://script.google.com/macros/s/AKfycbxEj4X_zN-FNqycMA8gxuJ5pOPaLhe0qrDErTYjokGZg8sSps0dj-5n_W7SRevGQQ/exec?codice=${codice}`;
-    const res = await fetch(url);
-    const data = await res.json();
-
-    if (data.success) {
-      // ✅ Codice valido: mostra l’app
-      document.getElementById("login-container").style.display = "none";
-      document.getElementById("app-container").style.display = "block";
-
-      // (Opzionale) Salva il codice per evitare login al prossimo avvio
-      localStorage.setItem("codiceAutenticato", codice);
-
-    } else {
-      erroreEl.textContent = "❌ Codice non valido";
-      erroreEl.style.display = "block";
-    }
-
-  } catch (error) {
-    console.error("Errore fetch codice:", error);
-    erroreEl.textContent = "❌ Errore di connessione";
-    erroreEl.style.display = "block";
-  }
+  fetch(`${URL_VERIFICA}?codice=${codice}`)
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        // Codice corretto → salva in localStorage e mostra l'app
+        localStorage.setItem("codiceAutorizzato", codice);
+        document.getElementById("login-container").style.display = "none";
+        document.getElementById("app-container").style.display = "block";
+        document.getElementById("filtro-container").style.display = "block";
+        caricaDati(); // ← funzione già presente nel tuo script.js
+      } else {
+        document.getElementById("errore-login").innerText = "❌ Codice non valido";
+        document.getElementById("errore-login").style.display = "block";
+      }
+    })
+    .catch(() => {
+      document.getElementById("errore-login").innerText = "❌ Errore di connessione";
+      document.getElementById("errore-login").style.display = "block";
+    });
 }
 
-// 🔄 Se hai già fatto il login in passato
+// Al caricamento della pagina, controlla se il codice è già salvato
 window.addEventListener("DOMContentLoaded", () => {
-  const codiceSalvato = localStorage.getItem("codiceAutenticato");
+  const codiceSalvato = localStorage.getItem("codiceAutorizzato");
   if (codiceSalvato) {
     document.getElementById("login-container").style.display = "none";
     document.getElementById("app-container").style.display = "block";
+    document.getElementById("filtro-container").style.display = "block";
+    caricaDati();
+  } else {
+    document.getElementById("login-container").style.display = "flex";
+    document.getElementById("app-container").style.display = "none";
+    document.getElementById("filtro-container").style.display = "none";
   }
 });
