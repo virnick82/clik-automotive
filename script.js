@@ -756,12 +756,31 @@ function mostraVetrina(dati) {
 
 function mostraNews(dati) {
   const cont = document.getElementById("news-container");
-  const news = dati.filter(r => r.Tipo === "News");
-  const testo = news.map(n => n.Titolo).join(" • ");
+  if (!cont) return;
 
+  // Prende solo le righe con Tipo = "News"
+  const news = dati.filter(r => r.Tipo && r.Tipo.toLowerCase() === "news");
+
+  if (news.length === 0) {
+    cont.innerHTML = "";
+    return;
+  }
+
+  // Crea il testo combinando titolo e testo
+  const testo = news.map(r => {
+    if (r.Testo && r.Testo.trim() !== "") {
+      return `${r.Titolo}: ${r.Testo}`;
+    } else {
+      return r.Titolo;
+    }
+  }).join(" • ");
+
+  // Inserisce HTML con etichetta e testo scorrevole
   cont.innerHTML = `
-    <span class="news-label">&nbsp;&nbsp;📰 News:</span>
-    <div class="news-marquee">${testo}</div>
+    <div class="news-wrapper">
+      <span class="news-label">&nbsp;&nbsp;📰 News:</span>
+      <div class="news-marquee">${testo}</div>
+    </div>
   `;
 }
 

@@ -40,6 +40,12 @@ function verificaCodice() {
         document.getElementById("vetrina-container").style.display = "block";
         document.getElementById("news-container").style.display = "block";
 
+        // 🔹 Riabilita i click dopo l’accesso
+        document.body.classList.remove("login-attivo");
+     
+        // 🔹 Mostra subito il pulsante Logout
+        document.getElementById("logout-btn").style.display = "block";
+
         // Carica i dati della PWA
         if (typeof caricaDati === "function") {
           caricaDati();
@@ -72,6 +78,8 @@ window.addEventListener("DOMContentLoaded", () => {
     document.getElementById("vetrina-container").style.display = "block";
     document.getElementById("news-container").style.display = "block";
 
+  
+
     if (typeof caricaDati === "function") {
       caricaDati();
     }
@@ -82,6 +90,9 @@ window.addEventListener("DOMContentLoaded", () => {
     document.getElementById("filtro-container").style.display = "none";
     document.getElementById("vetrina-container").style.display = "none";
     document.getElementById("news-container").style.display = "none";
+
+    // 🔹 Disabilita tutti i click sotto il login
+    document.body.classList.add("login-attivo");
   }
 });
 
