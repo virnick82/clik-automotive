@@ -1,5 +1,5 @@
 // URL Google Apps Script per verifica codice cliente
-const URL_VERIFICA = "https://script.google.com/macros/s/AKfycbxjj7DT23-DCj5YY4ZtWGEPJI6g0OxhG84KQvKPHgNjo5Wyga_0_vc-VtdjraqXerDU/exec";
+const URL_VERIFICA = "https://script.google.com/macros/s/AKfycby9uP68G-IejY1iUx4gDG2Fvw0G9JeK3PNDlY6AevZ-vVIbkGGr5DDUYDAkE_x_-UMk/exec";
 
 // Funzione di verifica codice
 function verificaCodice() {
