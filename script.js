@@ -43,7 +43,10 @@ function mostraMarche() {
   document.getElementById("anni-container").style.display = "none";
   document.getElementById("risultati-container").innerHTML = "";
   fadeTo("marche-container");  document.getElementById("vetrina-container").style.display = "block";
-  document.getElementById("filtro-container").style.display = "none";
+
+const filtro = document.getElementById("filtro-container");
+filtro.classList.remove("mostra");
+setTimeout(() => filtro.style.display = "none", 400); // dopo la transizione
 
   const mapMarche = {};
   datiAuto.forEach(r => {
@@ -79,7 +82,10 @@ function mostraModelli(marca) {
   document.getElementById("anni-container").style.display = "none";
   document.getElementById("risultati-container").innerHTML = "";
   document.getElementById("vetrina-container").style.display = "none";
-  document.getElementById("filtro-container").style.display = "block";
+
+  const filtro = document.getElementById("filtro-container");
+filtro.style.display = "block";     // lo fa comparire
+setTimeout(() => filtro.classList.add("mostra"), 10); // gli ridà l’opacità
 
 document.querySelector(".filtro-btn.tutte")?.style.setProperty("display", "inline-block");
 document.querySelector(".filtro-radio-btn.tutti")?.style.setProperty("display", "inline-block");
@@ -230,7 +236,9 @@ function mostraAnni(marca, modello) {
   document.getElementById("modelli-container").style.display = "none";
   fadeTo("anni-container"); 
 
-document.getElementById("filtro-container").style.display = "block";
+const filtro = document.getElementById("filtro-container");
+filtro.style.display = "block";     // lo fa comparire
+setTimeout(() => filtro.classList.add("mostra"), 10); // gli ridà l’opacità
 
 document.querySelector(".filtro-btn.tutte")?.style.setProperty("display", "inline-block");
 document.querySelector(".filtro-radio-btn.tutti")?.style.setProperty("display", "inline-block");
@@ -331,7 +339,11 @@ if (anniOrdinati.length === 0) {
 function mostraRisultati(marca, modello, anno) {
   document.getElementById("anni-container").style.display = "none";
   document.getElementById("vetrina-container").style.display = "none";
-  document.getElementById("filtro-container").style.display = "block";
+
+
+const filtro = document.getElementById("filtro-container");
+filtro.style.display = "block";     // lo fa comparire
+setTimeout(() => filtro.classList.add("mostra"), 10); // gli ridà l’opacità
 
 
 // 🔴 Nasconde i pulsanti Blade & Prossimità + Silca & Clik Automotive nella schermata risultati
@@ -813,4 +825,11 @@ document.getElementById("zoom-close").onclick = () => {
 }
 
 
+// 🔧 Nasconde il filtro finché la PWA non è pronta
+document.addEventListener("DOMContentLoaded", () => {
+  const filtro = document.getElementById("filtro-container");
+  if (filtro) filtro.style.display = "none";
+});
+
 window.onload = caricaDati;
+

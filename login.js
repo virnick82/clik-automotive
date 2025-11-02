@@ -74,7 +74,10 @@ window.addEventListener("DOMContentLoaded", () => {
     // Accesso automatico
     document.getElementById("login-container").style.display = "none";
     document.getElementById("app-container").style.display = "block";
-    document.getElementById("filtro-container").style.display = "block";
+
+    const filtro = document.getElementById("filtro-container");
+    filtro.classList.add("visibile"); 
+   
     document.getElementById("vetrina-container").style.display = "block";
     document.getElementById("news-container").style.display = "block";
 
