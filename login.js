@@ -139,7 +139,14 @@ function mostraScadenza() {
     .then(res => res.json())
     .then(data => {
       if (data.success && data.scadenza) {
-        alert(`📅 Il tuo abbonamento scade il: ${data.scadenza}`);
+        const dataPulita = new Date(data.scadenza).toLocaleDateString("it-IT", {
+  day: "2-digit",
+  month: "2-digit",
+  year: "numeric"
+});
+alert(`📅 Il tuo abbonamento scade il: ${dataPulita}`);
+
+
       } else {
         alert("⚠️ Nessuna informazione di scadenza trovata.");
       }
