@@ -45,6 +45,7 @@ body {
 #logo-header img {
   height: 40px;
   margin-right: 10px;
+
 }
 
 
@@ -696,4 +697,57 @@ body.login-attivo .whatsapp-float {
 #filtro-container.mostra {
   display: block !important;
   opacity: 1 !important;
+}
+
+/* 🔻 MENU A TENDINA CLIENTE 🔻 */
+#menu-wrapper {
+  position: fixed;
+  top: 8px;
+  right: 10px;
+  z-index: 1000;
+}
+
+#menu-toggle {
+  background-color: #ff3b3b;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 0 6px rgba(255,0,0,0.5);
+}
+
+#menu-dropdown {
+  display: none;
+  position: absolute;
+  right: 0;
+  background-color: #111;
+  border: 1px solid #ff3b3b;
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgba(255,0,0,0.4);
+  margin-top: 5px;
+  min-width: 180px;
+}
+
+#menu-dropdown button {
+  width: 100%;
+  background: none;
+  border: none;
+  color: white;
+  text-align: left;
+  padding: 10px 14px;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+#menu-dropdown button:hover {
+  background-color: #ff3b3b;
+  color: white;
+}
+
+/* Mostra il menu quando attivo */
+#menu-wrapper.active #menu-dropdown {
+  display: block;
 }

@@ -1,7 +1,10 @@
-// URL Google Apps Script per verifica codice cliente
-const URL_VERIFICA = "https://script.google.com/macros/s/AKfycbybAoagGft7hu3pxf2ZDgFZ2gBVHfwY49p8qUN8oU3yv9ciuQq-jva0EXcnv_3NawZP/exec";
+// ✅ URL unico della tua Web App Google Apps Script
+// (stesso usato per il login e per la scadenza)
+const GAS_URL = "https://script.google.com/macros/s/AKfycbybAoagGft7hu3pxf2ZDgFZ2gBVHfwY49p8qUN8oU3yv9ciuQq-jva0EXcnv_3NawZP/exec";
 
-// Funzione di verifica codice
+// ================================================================
+// FUNZIONE DI VERIFICA CODICE CLIENTE
+// ================================================================
 function verificaCodice() {
   const codiceInput = document.getElementById("codice-input");
   const codice = codiceInput.value.trim().toUpperCase();
@@ -22,8 +25,8 @@ function verificaCodice() {
   bottone.disabled = true;
   bottone.textContent = "Verifica...";
 
-  // 👉 AGGIUNGI IL DEVICE ID NELLA RICHIESTA
-  fetch(`${URL_VERIFICA}?codice=${codice}&device=${deviceId}`)
+  // 👉 Invio richiesta al GAS
+  fetch(`${GAS_URL}?codice=${codice}&device=${deviceId}`)
     .then(response => response.json())
     .then(data => {
       bottone.disabled = false;
@@ -42,9 +45,9 @@ function verificaCodice() {
 
         // 🔹 Riabilita i click dopo l’accesso
         document.body.classList.remove("login-attivo");
-     
-        // 🔹 Mostra subito il pulsante Logout
-        document.getElementById("logout-btn").style.display = "block";
+
+        // 🔹 Mostra il menu in alto a destra
+        document.getElementById("menu-wrapper").style.display = "block";
 
         // Carica i dati della PWA
         if (typeof caricaDati === "function") {
@@ -67,21 +70,22 @@ function verificaCodice() {
     });
 }
 
-// Al caricamento della pagina
+// ================================================================
+// AUTO LOGIN SE CODICE GIÀ SALVATO
+// ================================================================
 window.addEventListener("DOMContentLoaded", () => {
   const codiceSalvato = localStorage.getItem("codiceAutorizzato");
+
   if (codiceSalvato) {
     // Accesso automatico
     document.getElementById("login-container").style.display = "none";
     document.getElementById("app-container").style.display = "block";
-
-    const filtro = document.getElementById("filtro-container");
-    filtro.classList.add("visibile"); 
-   
+    document.getElementById("filtro-container").style.display = "block";
     document.getElementById("vetrina-container").style.display = "block";
     document.getElementById("news-container").style.display = "block";
 
-  
+    // 🔹 Mostra il menu a tendina anche in caso di auto-login
+    document.getElementById("menu-wrapper").style.display = "block";
 
     if (typeof caricaDati === "function") {
       caricaDati();
@@ -99,21 +103,49 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-// Funzione logout
-const logoutBtn = document.getElementById("logout-btn");
+// ================================================================
+// MENU A TENDINA (Preferiti / Scadenza / Logout)
+// ================================================================
 
-logoutBtn.addEventListener("click", () => {
-  // 🔹 NON cancelliamo il deviceId, così resta lo stesso ID
+// 🔹 Funzione Logout
+function logout() {
   localStorage.removeItem("codiceAutorizzato");
   location.reload();
-});
+}
 
-// Mostra il pulsante logout solo se loggato
-window.addEventListener("DOMContentLoaded", () => {
-  const codiceSalvato = localStorage.getItem("codiceAutorizzato");
-  if (codiceSalvato) {
-    logoutBtn.style.display = "block";
-  } else {
-    logoutBtn.style.display = "none";
-  }
-});
+// 🔹 Gestione apertura/chiusura menu
+const menuWrapper = document.getElementById("menu-wrapper");
+const menuToggle = document.getElementById("menu-toggle");
+
+if (menuToggle) {
+  menuToggle.addEventListener("click", () => {
+    menuWrapper.classList.toggle("active");
+  });
+
+  // Chiude il menu cliccando fuori
+  document.addEventListener("click", (e) => {
+    if (!menuWrapper.contains(e.target)) {
+      menuWrapper.classList.remove("active");
+    }
+  });
+}
+
+// 🔹 Mostra la scadenza abbonamento
+function mostraScadenza() {
+  const codice = localStorage.getItem("codiceAutorizzato");
+  if (!codice) return alert("⚠️ Effettua prima il login.");
+
+  fetch(`${GAS_URL}?tipo=scadenza&codice=${encodeURIComponent(codice)}`)
+    .then(res => res.json())
+    .then(data => {
+      if (data.success && data.scadenza) {
+        alert(`📅 Il tuo abbonamento scade il: ${data.scadenza}`);
+      } else {
+        alert("⚠️ Nessuna informazione di scadenza trovata.");
+      }
+    })
+    .catch((err) => {
+      console.error("Errore scadenza:", err);
+      alert("❌ Errore durante il controllo della scadenza.");
+    });
+}

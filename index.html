@@ -13,36 +13,21 @@
 <body>
 
   <div id="logo-header">
-  <img src="clik_logo.png" alt="Logo Clik" />
+  <img src="clikautomotive.png" alt="Logo Clik" />
   <span>Assistenza Chiavi Automotive</span>
 
 </div>
 
 
-<!-- Pulsante Logout -->
-<!-- Pulsante Logout compatto -->
-<button id="logout-btn" style="
-  position: fixed;
-  top: 9px;
-  right: 2px;
-  background: #ff3b3b;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  width: 80px;
-  height: 25px;
-  font-size: 13px;
-  font-weight: bold;
-  line-height: 20px;
-  text-align: center;
-  cursor: pointer;
-  z-index: 1000;
-  display: none;
-  box-shadow: 0 0 6px rgba(255,0,0,0.5);
-">
-  
-  🔒 Logout
-</button>
+<!-- 🔻 MENU A TENDINA CLIENTE 🔻 -->
+<div id="menu-wrapper">
+  <button id="menu-toggle">☰</button>
+  <div id="menu-dropdown">
+    <button onclick="mostraPreferiti()">⭐ Preferiti</button>
+    <button onclick="mostraScadenza()">📅 Scadenza Abbonamento</button>
+    <button onclick="logout()">🚪 Logout</button>
+  </div>
+</div>
 
 
   <!-- Vetrina -->
