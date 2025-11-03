@@ -702,7 +702,7 @@ body.login-attivo .whatsapp-float {
 /* 🔻 MENU A TENDINA CLIENTE 🔻 */
 #menu-wrapper {
   position: fixed;
-  top: 8px;
+  top: 11px;
   right: 10px;
   z-index: 1000;
 }
@@ -712,12 +712,19 @@ body.login-attivo .whatsapp-float {
   color: white;
   border: none;
   border-radius: 8px;
-  padding: 6px 10px;
+  padding: 3px 8px;
   font-family: 'Trebuchet MS', sans-serif;
-  font-size: 20px;
-  font-weight: bold;
+  font-size: 15px;
+  font-weight: normal;
   cursor: pointer;
   box-shadow: 0 0 6px rgba(255,0,0,0.5);
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+/* Effetto al passaggio */
+#menu-toggle:hover {
+  background-color: #e22a2a;
+  transform: scale(1.05);
 }
 
 #menu-dropdown {
