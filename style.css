@@ -762,3 +762,10 @@ body.login-attivo .whatsapp-float {
 #menu-wrapper.active #menu-dropdown {
   display: block;
 }
+
+/* 🔹 Spazio extra sotto alle liste per non far toccare i pulsanti il bordo inferiore */
+#marche-container,
+#modelli-container,
+#anni-container {
+  padding-bottom: 40px;   /* 👈 puoi variare (es. 60–80px) secondo gusto */
+}
