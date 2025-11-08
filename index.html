@@ -4,131 +4,124 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="manifest" href="manifest.json">
-<link rel="icon" sizes="192x192" href="icon-192.png">
-<link rel="apple-touch-icon" href="icon-192.png">
-<meta name="theme-color" content="#000000">
+  <link rel="icon" sizes="192x192" href="icon-192.png">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <meta name="theme-color" content="#000000">
   <title>🔑 Clik Automotive</title>
   <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
 
+  <!-- 🔹 LOGO HEADER -->
   <div id="logo-header">
-  <img src="clikautomotive.png" alt="Logo Clik" />
-  <span>Assistenza Chiavi Automotive</span>
-
-</div>
-
-
-<!-- 🔻 MENU A TENDINA CLIENTE 🔻 -->
-<div id="menu-wrapper">
-    <button id="menu-toggle">Menù</button> 
-    <div id="menu-dropdown">
-    <button onclick="mostraPreferiti()">⭐ Preferiti</button>
-    <button onclick="mostraScadenza()">📅 Scadenza Abbonamento</button>
-    <button onclick="logout()">🚪 Logout</button>
+    <img src="clikautomotive.png" alt="Logo Clik" />
+    <span>Assistenza Chiavi Automotive</span>
   </div>
-</div>
 
+  <!-- 🔻 MENU A TENDINA CLIENTE -->
+  <div id="menu-wrapper">
+    <button id="menu-toggle">Menù</button>
+    <div id="menu-dropdown">
+      <button onclick="mostraPreferiti()">⭐ Preferiti</button>
+      <button onclick="mostraScadenza()">📅 Scadenza Abbonamento</button>
+      <button onclick="logout()">🚪 Logout</button>
+    </div>
+  </div>
 
-  <!-- Vetrina -->
+  <!-- 🔹 VETRINA -->
   <header id="vetrina-container">
     <!-- Caricata dinamicamente -->
   </header>
 
+  <!-- 🔹 FILTRI -->
+  <div id="filtro-container" class="filtro-box" style="display:none;opacity:0;">
+    <div class="filtro-intestazione">🔍 Filtra il tipo di chiave</div>
+    <div class="filtro-bottoni">
+      <button class="filtro-btn tutte btn-piccola" data-radio="tutte" onclick="filtroChiave('tutte')">Blade & Prossimità</button>
+      <button class="filtro-btn tutte" data-radio="blade" onclick="filtroChiave('blade')">🔑 Blade</button>
+      <button class="filtro-btn" data-radio="prossimità" onclick="filtroChiave('prossimità')">📡 Prossimità</button>
+    </div>
 
-<div id="filtro-container" class="filtro-box" style="display:none;opacity:0;">
-  <div class="filtro-intestazione">🔍 Filtra il tipo di chiave</div>
-
-  <div class="filtro-bottoni">
-<button class="filtro-btn tutte btn-piccola" data-radio="tutte" onclick="filtroChiave('tutte')">Blade & Prossimità</button>
-  <button class="filtro-btn tutte" data-radio="blade" onclick="filtroChiave('blade')">🔑&nbsp;&nbsp;Blade</button>
-  <button class="filtro-btn" data-radio="prossimità" onclick="filtroChiave('prossimità')">📡&nbsp;&nbsp;Prossimità</button>
-</div>
-<!-- <div class="filtro-intestazione">🎯 Mostra solo:</div> -->
-<div class="filtro-bottoni">
-<button class="filtro-radio-btn tutti btn-piccola" onclick="applicaFiltroRadiocomando('tutti')">Silca & Clik Automotive</button>
-
- <button class="filtro-radio-btn tutti" onclick="applicaFiltroRadiocomando('silca')">
-<img src="silca.png" class="iconino" alt="CLIK">
-
-  <button class="filtro-radio-btn" onclick="applicaFiltroRadiocomando('compatibili')">
-<img src="clikautomotive.png" class="iconino" alt="CLIK">
-</button>
-</div>
+    <div class="filtro-bottoni">
+      <button class="filtro-radio-btn tutti btn-piccola" onclick="applicaFiltroRadiocomando('tutti')">Silca & Clik Automotive</button>
+      <button class="filtro-radio-btn tutti" onclick="applicaFiltroRadiocomando('silca')">
+        <img src="silca.png" class="iconino" alt="Silca">
+      </button>
+      <button class="filtro-radio-btn" onclick="applicaFiltroRadiocomando('compatibili')">
+        <img src="clikautomotive.png" class="iconino" alt="Clik Automotive">
+      </button>
+    </div>
   </div>
-</div>
 
-
-
-  <!-- App principale -->
-
-<!-- LOGIN -->
-<div id="login-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh;">
-  <div style="background-color: #111; padding: 30px; border-radius: 10px; border: 2px solid red; text-align: center;">
-    <h2 style="color: white; margin-bottom: 15px;">Accesso Autorizzato</h2>
-    <input id="codice-input" type="text" placeholder="Inserisci codice cliente" style="padding: 10px; width: 250px; margin-bottom: 10px;" />
-    <br>
-    <button onclick="verificaCodice()" style="padding: 10px 20px; background-color: red; color: white; border: none; cursor: pointer;">Accedi</button>
-    <div id="errore-login" style="color: red; margin-top: 10px; display: none;">❌ Errore di connessione</div>
+  <!-- 🔹 APP PRINCIPALE -->
+  <div id="login-container" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;">
+    <div style="background-color:#111;padding:30px;border-radius:10px;border:2px solid red;text-align:center;">
+      <h2 style="color:white;margin-bottom:15px;">Accesso Autorizzato</h2>
+      <input id="codice-input" type="text" placeholder="Inserisci codice cliente" style="padding:10px;width:250px;margin-bottom:10px;" />
+      <br>
+      <button onclick="verificaCodice()" style="padding:10px 20px;background-color:red;color:white;border:none;cursor:pointer;">Accedi</button>
+      <div id="errore-login" style="color:red;margin-top:10px;display:none;">❌ Errore di connessione</div>
+    </div>
   </div>
-</div>
 
-
-
-  <div id="app-container" style="display: none;">
+  <div id="app-container" style="display:none;">
     <div id="marche-container" class="brand-logos"></div>
     <div id="modelli-container" class="modelli-list"></div>
     <div id="anni-container" class="modelli-list" style="display:none;"></div>
     <div id="risultati-container" class="risultati-list"></div>
   </div>
 
-  <!-- News finali -->
-   <section id="news-container"></section>
-    <!-- Caricata dinamicamente -->
-  </footer>
-
-  <script src="script.js"></script>
-
-  <script src="login.js"></script>
-
-<script>
-  // Gestione Logout
-  const logoutBtn = document.getElementById("logout-btn");
-
-  logoutBtn.addEventListener("click", () => {
-    localStorage.removeItem("codiceAutorizzato");
-    location.reload();
-  });
-
-  // Mostra il pulsante logout solo se loggato
-  window.addEventListener("DOMContentLoaded", () => {
-    const codiceSalvato = localStorage.getItem("codiceAutorizzato");
-    if (codiceSalvato) {
-      logoutBtn.style.display = "block";
-    } else {
-      logoutBtn.style.display = "none";
-    }
-  });
-</script>
-
-
-
-<a href="https://wa.me/393895019982?text=Ciao!%20Ho%20bisogno%20di%20assistenza%20per%20le%20chiavi%20auto." 
-   class="whatsapp-float" 
-   target="_blank" 
-   aria-label="Chatta su WhatsApp">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" 
-       alt="WhatsApp" />
-</a>
-
-
-
-
-<!-- Overlay zoom immagine -->
-<div id="zoom-overlay">
-  <span id="zoom-close">×</span>
-  <img id="zoom-img" src="" alt="Zoom">
+  <!-- 🔹 SCHERMATA PREFERITI -->
+ <div id="preferiti-container"
+  style="
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100vh;
+    background:#111;
+    flex-direction:column;
+    align-items:center;
+    justify-content:flex-start;
+    color:white;
+    padding:20px 10px 100px 10px;
+    box-sizing:border-box;
+    overflow-y:auto;
+    z-index:999;">
+  <h2 style="color:red; text-align:center; margin-bottom:20px;">⭐ I miei Preferiti</h2>
+  <div id="lista-preferiti" style="width:100%; max-width:600px;"></div>
+  <button id="btn-torna-home" class="btn-rettangolare" 
+  style="margin-top:20px; width:230px; height:60px; font-size:20px;">
+  ⬅️ Torna alla Home
+</button>
 </div>
+
+
+   
+
+  <!-- 🔹 NEWS FINALI -->
+  <section id="news-container"></section>
+
+  <!-- 🔹 WhatsApp Float -->
+  <a href="https://wa.me/393895019982?text=Ciao!%20Ho%20bisogno%20di%20assistenza%20per%20le%20chiavi%20auto."
+     class="whatsapp-float"
+     target="_blank"
+     aria-label="Chatta su WhatsApp">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"
+         alt="WhatsApp" />
+  </a>
+
+  <!-- 🔹 Overlay zoom immagine -->
+  <div id="zoom-overlay">
+    <span id="zoom-close">×</span>
+    <img id="zoom-img" src="" alt="Zoom">
+  </div>
+
+  <!-- 🔹 SCRIPT PRINCIPALI (ordine corretto) -->
+  <script src="script.js"></script>
+  <script src="login.js"></script>
 
 </body>
 </html>

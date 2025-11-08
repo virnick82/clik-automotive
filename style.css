@@ -769,3 +769,101 @@ body.login-attivo .whatsapp-float {
 #anni-container {
   padding-bottom: 40px;   /* 👈 puoi variare (es. 60–80px) secondo gusto */
 }
+
+/* ⭐ Icona preferiti sopra la foto */
+/* --- Icona preferiti --- */
+
+.fav-wrapper {
+  position: absolute;
+  bottom: 8px;       /* sposta leggermente più in basso */
+  left: 6px;         /* più vicino al bordo sinistro */
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.fav-icon-img {
+  width: 38px;
+  height: 38px;
+  filter: drop-shadow(0 0 10px gold) brightness(1.7); /* luce fissa, sempre accesa */
+}
+
+.fav-text {
+  font-size: 14px;
+  color: white;
+  font-weight: bold;
+  text-shadow: 0 0 4px black;
+}
+
+
+
+/* === SEZIONE PREFERITI === */
+#preferiti-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: #111;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  color: white;
+  padding: 20px 10px 100px 10px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  z-index: 999;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+
+/* Mostra la sezione solo quando il body ha la classe */
+body.mostra-preferiti #preferiti-container {
+  display: flex !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Garantisce che sia invisibile all’avvio */
+body:not(.mostra-preferiti) #preferiti-container {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  display: none !important;
+}
+
+.btn-rimuovi {
+  background-color: #e60000;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-family: "Trebuchet MS", sans-serif; /* ✅ carattere corretto */
+  font-size: 18px;
+  font-weight: bold;
+  padding: 10px 20px;
+  width: 140px;    /* ✅ larghezza */
+  height: 35px;    /* ✅ altezza */
+  /* ✅ Allineamento perfetto icona + testo */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px; /* distanza tra 🗑️ e testo */
+  cursor: pointer;
+  margin-top: 10px; /* ⬅️ aumentato da 10px a 20px */
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-rimuovi:hover {
+  background-color: #ff3333;
+  transform: scale(1.05);
+}
+
+
+/* ✨ Animazione dissolvenza per rimozione preferiti */
+.preferito-fadeout {
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}

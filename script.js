@@ -9,6 +9,27 @@ let filtroTipoChiave = "tutte"; // 🔹 nuovo filtro globale
 
 let filtroRadiocomando = "tutti";
 
+// === GESTIONE PREFERITI ===
+function _favKey() {
+  const codice = localStorage.getItem("codiceAutorizzato") || "ospite";
+  return `preferiti_${codice}`;
+}
+function _favLoad() {
+  try { return JSON.parse(localStorage.getItem(_favKey())) || []; }
+  catch { return []; }
+}
+function _favSave(lista) {
+  localStorage.setItem(_favKey(), JSON.stringify(lista));
+}
+function _favId(r) {
+  return `${r.Marca}|${r.Modello}|${r["Anno Inizio"]}-${r["Anno Fine"]}`;
+}
+function _favHas(r) {
+  const id = _favId(r);
+  return _favLoad().some(x => x._id === id);
+}
+
+
 async function caricaDati() {
   try {
     console.log("Caricamento dati...");
@@ -417,6 +438,82 @@ if (immagini.length > 0) {
   fotoWrapper.style.textAlign = "center";
   fotoWrapper.style.margin = "12px 0";
 
+
+// ⭐ Icona Preferiti sopra la foto, in basso a sinistra
+const favWrapper = document.createElement("div");
+favWrapper.className = "fav-wrapper";
+
+const favIcon = document.createElement("img");
+favIcon.src = "preferiti.png";
+favIcon.alt = "Aggiungi ai Preferiti";
+favIcon.className = "fav-icon-img";
+
+const favText = document.createElement("span");
+favText.textContent = "Aggiungi ai Preferiti";
+favText.className = "fav-text";
+
+const aggiornaStato = () => {
+  if (_favHas(risultatoConFoto)) {
+    favText.textContent = "Aggiunto ai Preferiti";
+    favIcon.style.opacity = "1";
+  } else {
+    favText.textContent = "Aggiungi ai Preferiti";
+    favIcon.style.opacity = "0.6";
+  }
+};
+aggiornaStato();
+
+favWrapper.onclick = () => {
+  let arr = _favLoad();
+  const id = _favId(risultatoConFoto);
+
+  if (_favHas(risultatoConFoto)) {
+    arr = arr.filter(x => x._id !== id);
+  } else {
+    arr.push({
+      _id: id,
+      Marca: risultatoConFoto.Marca,
+      Modello: risultatoConFoto.Modello,
+      "Anno Inizio": risultatoConFoto["Anno Inizio"],
+      "Anno Fine": risultatoConFoto["Anno Fine"],
+      "Tipo Chiave": risultatoConFoto["Tipo Chiave"],
+      Transponder: risultatoConFoto.Transponder || "",
+      ts: Date.now()
+    });
+  }
+
+  _favSave(arr);
+  aggiornaStato();
+};
+
+// Posizionamento sopra la foto
+fotoWrapper.style.position = "relative";
+favWrapper.style.position = "absolute";
+
+favWrapper.style.bottom = "-15px";
+
+favWrapper.style.left = "-5px";
+favWrapper.style.zIndex = "15";
+favWrapper.style.display = "flex";
+favWrapper.style.alignItems = "center";
+favWrapper.style.gap = "6px";
+favWrapper.style.background = "rgba(0,0,0,0.45)";
+favWrapper.style.padding = "4px 8px";
+favWrapper.style.borderRadius = "8px";
+favWrapper.style.cursor = "pointer";
+
+favIcon.style.width = "28px";
+favIcon.style.height = "28px";
+
+favText.style.color = "#fff";
+favText.style.fontSize = "15px";
+favText.style.fontFamily = "'Trebuchet MS', sans-serif";
+
+favWrapper.appendChild(favIcon);
+favWrapper.appendChild(favText);
+fotoWrapper.appendChild(favWrapper);
+
+
   let indice = 0;
 
   const titolo = document.createElement("div");
@@ -699,6 +796,11 @@ if (risultati.length === 0) {
 
 
     `;
+
+
+
+
+
     container.appendChild(div);
   });
 
@@ -797,14 +899,21 @@ function mostraNews(dati) {
 }
 
 function fadeTo(idToShow) {
-  const sezioni = ["marche-container", "modelli-container", "anni-container", "risultati-container"];
+  const sezioni = [
+    "marche-container",
+    "modelli-container",
+    "anni-container",
+    "risultati-container",
+    "preferiti-container" // ✅ aggiunto per i preferiti
+  ];
+
   sezioni.forEach(id => {
     const el = document.getElementById(id);
     if (el) {
       if (id === idToShow) {
         el.classList.add("fade-container");
         el.style.opacity = 0;
-        el.style.display = id === "risultati-container" ? "block" : "flex";
+        el.style.display = id === "risultati-container" || id === "preferiti-container" ? "block" : "flex";
         requestAnimationFrame(() => {
           el.style.transition = "opacity 0.4s ease";
           el.style.opacity = 1;
@@ -815,13 +924,10 @@ function fadeTo(idToShow) {
     }
   });
 
-
-// Chiudi zoom cliccando sulla X
-document.getElementById("zoom-close").onclick = () => {
-  document.getElementById("zoom-overlay").style.display = "none";
-};
-
-
+  // Chiudi overlay zoom
+  document.getElementById("zoom-close").onclick = () => {
+    document.getElementById("zoom-overlay").style.display = "none";
+  };
 }
 
 
@@ -829,6 +935,164 @@ document.getElementById("zoom-close").onclick = () => {
 document.addEventListener("DOMContentLoaded", () => {
   const filtro = document.getElementById("filtro-container");
   if (filtro) filtro.style.display = "none";
+});
+
+
+
+// -------------------- GESTIONE SCHERMATA PREFERITI --------------------
+function mostraPreferiti() {
+// Chiudi il menu a tendina
+document.getElementById("menu-dropdown").style.display = "none";
+  document.body.classList.add("mostra-preferiti");
+  const cont = document.getElementById("preferiti-container");
+  const lista = document.getElementById("lista-preferiti");
+  lista.innerHTML = "";
+
+  const favs = _favLoad();
+
+  if (favs.length === 0) {
+    lista.innerHTML = `
+      <div style="color:#ccc; text-align:center; margin-top:40px;">
+        Nessuna chiave aggiunta ai preferiti ⭐<br><br>
+        Aggiungi una chiave cliccando sull’icona ⭐ nella schermata dettagli.
+      </div>`;
+    return;
+  }
+
+  favs.sort((a, b) => b.ts - a.ts);
+
+  favs.forEach(f => {
+    // Trova la foto nel database (colonna "Foto Chiave")
+    const chiaveRecord = datiAuto.find(r =>
+      r.Marca === f.Marca &&
+      r.Modello === f.Modello &&
+      parseInt(r["Anno Inizio"]) === parseInt(f["Anno Inizio"])
+    );
+
+    const fotoChiave = chiaveRecord?.["Foto Chiave"] || "";
+    const annoRif = parseInt(f["Anno Inizio"]);
+
+    // Contenitore principale
+    const div = document.createElement("div");
+    div.style = `
+      background:#222; 
+      border-radius:8px; 
+      padding:12px; 
+      margin:10px auto; 
+      width:90%;
+      max-width:600px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      cursor:pointer;
+      transition:transform 0.2s ease, box-shadow 0.2s ease;
+      box-shadow:0 0 6px rgba(255,215,0,0.3);
+    `;
+    div.onmouseover = () => div.style.transform = "scale(1.02)";
+    div.onmouseout = () => div.style.transform = "scale(1)";
+    
+    // 🔹 Apre la scheda quando clicchi sul riquadro (tranne sul pulsante rimuovi)
+    div.addEventListener("click", (e) => {
+      if (!e.target.closest(".btn-rimuovi")) { // ignora clic sul pulsante
+        document.body.classList.remove("mostra-preferiti");
+        mostraRisultati(f.Marca, f.Modello, annoRif);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    });
+
+    // Sezione testuale a sinistra
+    const info = document.createElement("div");
+    info.style = "flex:1; text-align:left;";
+    info.innerHTML = `
+      <div style="font-size:1.2em; color:red; font-weight:bold;">${f.Marca} ${f.Modello}</div>
+      <div style="margin-top:4px;">🔑 <b>Tipo:</b> ${f["Tipo Chiave"]}</div>
+      <div style="margin-top:2px;">📅 <b>Anni:</b> ${f["Anno Inizio"]} – ${f["Anno Fine"]}</div>
+      <div style="margin-top:2px; margin-bottom:10px;">💬 <b>Transponder:</b> ${f.Transponder || "—"}</div>
+      <button class="btn-rimuovi" onclick="rimuoviPreferito('${f._id}')">🗑️ <span style="font-style:italic;">Rimuovi</span></button>
+    `;
+
+    // Miniatura immagine a destra
+    const thumb = document.createElement("img");
+    thumb.src = fotoChiave || "noimage.png";
+    thumb.alt = "Chiave";
+    thumb.style = `
+      width:80px;
+      height:80px;
+      object-fit:contain;
+      border-radius:8px;
+      margin-left:10px;
+      background:#111;
+      box-shadow:0 0 5px rgba(0,0,0,0.6);
+    `;
+
+    div.appendChild(info);
+    div.appendChild(thumb);
+    lista.appendChild(div);
+  });
+}
+
+function rimuoviPreferito(id) {
+  // trova il div corrispondente al preferito
+  const lista = document.getElementById("lista-preferiti");
+  const div = Array.from(lista.children).find(el =>
+    el.innerHTML.includes(`rimuoviPreferito('${id}')`)
+  );
+
+  if (div) {
+    // aggiunge la classe per la dissolvenza
+    div.classList.add("preferito-fadeout");
+
+    // rimuove effettivamente dopo l’animazione
+    setTimeout(() => {
+      let favs = _favLoad();
+      favs = favs.filter(f => f._id !== id);
+      _favSave(favs);
+      mostraPreferiti();
+    }, 400); // ⏱️ durata animazione in ms
+  } else {
+    // fallback, nel caso non trovasse il div
+    let favs = _favLoad();
+    favs = favs.filter(f => f._id !== id);
+    _favSave(favs);
+    mostraPreferiti();
+  }
+}
+
+// 🔙 Pulsante per tornare alla Home
+document.addEventListener("DOMContentLoaded", () => {
+  const btnTornaHome = document.getElementById("btn-torna-home");
+  if (btnTornaHome) {
+    btnTornaHome.addEventListener("click", () => {
+      console.log("🔙 Torno alla home");
+      document.body.classList.remove("mostra-preferiti"); // chiude overlay
+      mostraMarche(); // mostra di nuovo i loghi delle marche
+      window.scrollTo({ top: 0, behavior: "smooth" }); // torna in cima
+    });
+  }
+});
+
+// 🔹 GESTIONE MENU A TENDINA — FIX BUG RIAPERTURA
+document.addEventListener("DOMContentLoaded", () => {
+  const toggle = document.getElementById("menu-toggle");
+  const menu = document.getElementById("menu-dropdown");
+
+  if (toggle && menu) {
+    toggle.addEventListener("click", (e) => {
+      e.stopPropagation(); // evita conflitti con click fuori
+      const isVisible = menu.style.display === "block";
+      // Chiudi eventuali altri overlay
+      document.getElementById("preferiti-container").style.display = "none";
+      // Alterna il menu
+      menu.style.display = isVisible ? "none" : "block";
+    });
+
+    // 🔸 Chiude il menu se clicchi fuori
+    document.addEventListener("click", (e) => {
+      if (!menu.contains(e.target) && e.target !== toggle) {
+        menu.style.display = "none";
+      }
+    });
+  }
 });
 
 window.onload = caricaDati;
